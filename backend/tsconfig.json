@@ -1,0 +1,31 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "incremental": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./@types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/public/*.*"
+  ],
+  "exclude": [
+    "node_modules/**"
+  ]
+}
