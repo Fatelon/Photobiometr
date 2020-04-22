@@ -1,0 +1,31 @@
+<div>
+    <ul class="list">
+        <li *ngFor="let item of items">
+            <img src="{{item.thumb}}" (click)="setPicture(item)" width="100"/>
+        </li>
+    </ul>
+</div>
+
+<div>
+    <div #container class="container"></div>
+    <div #svg class="container"></div>
+</div>
+
+<style>
+    .list {
+        list-style-type: none;
+        display: flex;
+        width: 800px;
+        overflow-x: scroll;
+    }    
+    .list li {
+        margin: 3px;
+    }
+    #container, #svg, .container {
+        position: absolute;
+        top: 150px;
+        left: 0;
+    }
+</style>
+
+

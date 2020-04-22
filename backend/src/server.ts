@@ -9,6 +9,8 @@ import http from 'http';
 import debug from 'debug';
 import app from './app';
 
+const routes = require('./routes');
+
 export interface NsEnvI {
   PORT: string;
 }
@@ -16,9 +18,8 @@ export interface NsEnvI {
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
-
 app.set('port', port);
-
+app.use(routes);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
