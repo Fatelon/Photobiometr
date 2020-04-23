@@ -11,6 +11,17 @@
     <div #svg class="container"></div>
 </div>
 
+<div class="info" *ngIf="currentPicture">
+    <h3>Exif Info</h3>
+    <p>
+        {{currentPicture.name}} <br>
+        Distance: {{currentPicture.metadata.distance.value}} {{currentPicture.metadata.distance.unit}} <br>
+        Focus Length: {{currentPicture.metadata.fl.value}} {{currentPicture.metadata.fl.unit}} <br>
+        Focus Length 35mm: {{currentPicture.metadata.efl.value}} {{currentPicture.metadata.efl.unit}} <br>
+        DOF: {{currentPicture.metadata.dof.value}} {{currentPicture.metadata.dof.unit}} <br>
+    </p>
+</div>
+
 <style>
     .list {
         list-style-type: none;
@@ -25,6 +36,11 @@
         position: absolute;
         top: 150px;
         left: 0;
+    }
+    .info {
+        position: absolute;
+        top: 150px;
+        left: 650px;
     }
 </style>
 

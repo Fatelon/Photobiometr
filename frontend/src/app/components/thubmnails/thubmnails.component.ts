@@ -6,6 +6,7 @@ interface Picture {
   name: string;
   thumb: string;
   foto: string;
+  metadata: any;
 }
 
 class Point {
@@ -26,7 +27,7 @@ class Point {
 })
 export class ThubmnailsComponent implements OnInit, AfterViewInit {
   items:Picture[] = [];
-  currentPicture = "";
+  currentPicture:Picture;
 
   points: Point[] = [];
   circles: any[]=  [];
@@ -44,11 +45,12 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.ThubmnailsService.getThumbs().subscribe((res:string[]) => {
-      this.items = res.map(name => {
+      this.items = res.map((item:any) => {
         return {
-          name: name,
-          thumb: `http://localhost:3001/public/thumbnails/${name}`,
-          foto: `http://localhost:3001/public/fotos/${name}`,
+          name: item.name,
+          thumb: `http://localhost:3001/public/thumbnails/${item.name}`,
+          foto: `http://localhost:3001/public/fotos/${item.name}`,
+          metadata: item.metadata
         }
         
       });
@@ -66,7 +68,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
 
   setPicture(picture: Picture) {
     let item:Picture = this.items.find(item => item.name === picture.name);
-    this.currentPicture = item.foto || "";
+    this.currentPicture = item;
     if (!this.img) {
       this.img = this.drawImage.image(item.foto);
     } else {

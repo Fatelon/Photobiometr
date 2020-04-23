@@ -1,4 +1,7 @@
 import { Dirent } from "fs";
+import {readExif} from '../utils/exifReader';
+import {imgInfo} from '../utils/imgInterface'
+
 
 const express = require('express');
 const router = express.Router();
@@ -28,19 +31,32 @@ async function  ResizeFile (name) {
         
 }
 
+
+
+
 router.get('/', async (req, res) => {
     const dir: Dirent[] = await fs.promises.opendir(dirFotoName);
     const dirPublic: Dirent[] = await fs.promises.opendir(dirPublicThumbName);
-    let list: string[] = [];
+    let list: any[] = [];
     for await (let file of dir) {
-       list.push(file.name);
+       let metadata = await readExif(path.join(dirFotoName, file.name));
+
+       list.push({
+           name: file.name,
+           metadata: {
+            distance: metadata["FocusDistance"],
+            efl: metadata["FocalLength35efl"],
+            fl: metadata["FocalLength"],
+            dof: metadata["DOF"],
+        }
+        });
        await fs.promises.access(path.join(dirPublicThumbName ,file.name), fs.constants.R_OK)
         .then(() => {})
         .catch(err =>{
             ResizeFile(file.name);
         });
     }
-
+    
     res.json(list);
 });
 
