@@ -1,0 +1,34 @@
+<div>
+    <ul class="list">
+        <li *ngFor="let item of items">
+            <img src="{{item.thumb}}" (click)="setPicture(item)" width="100"/>
+        </li>
+    </ul>
+</div>
+<div class="editor">
+
+  <app-edit-panel *ngIf="currentPicture" (clearClick)="clearDrawingArea($event)"></app-edit-panel>
+
+  <div class="container">
+    <div #imgArea></div>
+    <div #drowingArea></div>
+  </div>
+
+  <div class="info">
+    <mat-card *ngIf="currentPicture">
+      <mat-card-header>
+        <mat-card-title>Exif Info</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          {{currentPicture.name}} <br>
+          Distance: {{currentPicture.metadata.distance.value}} {{currentPicture.metadata.distance.unit}} <br>
+          Focus Length: {{currentPicture.metadata.fl.value}} {{currentPicture.metadata.fl.unit}} <br>
+          Focus Length 35mm: {{currentPicture.metadata.efl.value}} {{currentPicture.metadata.efl.unit}} <br>
+          DOF: {{currentPicture.metadata.dof.value}} {{currentPicture.metadata.dof.unit}} <br>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

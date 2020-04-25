@@ -1,6 +1,6 @@
 import { Dirent } from "fs";
 import {readExif} from '../utils/exifReader';
-import {imgInfo} from '../utils/imgInterface';
+
 
 import {Calculate} from '../utils/calculate';
 

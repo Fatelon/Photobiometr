@@ -1,16 +1,18 @@
-const exiftool = require('node-exiftool');
-const exiftoolBin = require('dist-exiftool');
+import { IMetaObject, IParseObject } from "./entity";
+import exiftool from 'node-exiftool';
+import exiftoolBin from 'dist-exiftool';
+
 const ep = new exiftool.ExiftoolProcess(exiftoolBin);
 
-
 const options = {
-    detached: true,
-    env: Object.assign({}, process.env, {
-      ENVIRONMENT_VARIABLE: 1,
-    }),
+  detached: true,
+  env: Object.assign({}, process.env, {
+    ENVIRONMENT_VARIABLE: 1,
+  }),
 }
 
 let keys = [
+<<<<<<< HEAD
     'SourceFile',
     'Make',
     'Model',
@@ -43,9 +45,49 @@ function parseExif(exifData) {
         return;
     }
     let outputMetadata = {}
+=======
+  'SourceFile',
+  'Make',
+  'Model',
+  'Orientation',
+  'XResolution',
+  'YResolution',
+  'ResolutionUnit',
+  'ModifyDate',
+  'ExposureTime',
+  'FNumber',
+  'ISO',
+  'FocalLength',
+  'FocalPlaneDiagonal',
+  'LensType',
+  'FocusDistance',
+  'LensInfo',
+  'LensModel',
+  'Megapixels',
+  'DOF',
+  'FOV',
+  'FocalLength35efl',
+  'HyperfocalDistance',
+];
+>>>>>>> ed1b441ae1bdfe93dda7441062ef6a007cd919fc
 
-    let data = exifData.data[0];
+const parseObjects: IParseObject[] = [
+  {
+    unit: 'm',
+    name: 'FocusDistance'
+  }, {
+    unit: 'm',
+    name: 'DOF'
+  }, {
+    unit: 'mm',
+    name: 'FocalLength'
+  }, {
+    unit: 'mm',
+    name: 'FocalLength35efl'
+  }
+];
 
+<<<<<<< HEAD
     let width = data['ExifImageWidth'];
     outputMetadata['width'] = width;
     let height = data['ExifImageHeight'];
@@ -80,27 +122,42 @@ function parseExif(exifData) {
         value: efl
     };
 
+=======
+function parseExif(exifData) {
+  if (exifData.error) {
+    console.error(exifData.error);
+    return {};
+  }
+  const outputMetadata = {};
 
-    return outputMetadata;
+  parseObjects.forEach(parseObj => {
+    outputMetadata[parseObj.name] = {
+      unit: parseObj.unit,
+      value: parseFloat(exifData.data[0][parseObj.name].split(' ')[0])
+    } as IMetaObject;
+  });
+>>>>>>> ed1b441ae1bdfe93dda7441062ef6a007cd919fc
+
+  return outputMetadata;
 }
 
 export async function readExif(filePath) {
-    let metadata;
-    await ep
-        .open(options)
-        .then((pid) => console.log('Started exiftool process %s', pid))
-        .then(() => ep.readMetadata(filePath, ['-File:all']))
-        .then((data) => {
-            console.log('data', data);
-            metadata = parseExif(data)
-        }, console.error)
-        .then(() => ep.close())
-        .then(()=> {
-            console.log(metadata)
-            return metadata
-        })
-        .catch(console.error);
-    return metadata;
+  let metadata = {};
+  await ep
+    .open(options)
+    .then((pid) => console.log('Started exiftool process %s', pid))
+    .then(() => ep.readMetadata(filePath, ['-File:all']))
+    .then((data) => {
+      console.log('data', data);
+      metadata = parseExif(data)
+    }, console.error)
+    .then(() => ep.close())
+    .then(()=> {
+      console.log(metadata)
+      return metadata
+    })
+    .catch(console.error);
+  return metadata;
 }
 
 
