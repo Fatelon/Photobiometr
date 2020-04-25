@@ -4,12 +4,12 @@ import {HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ThubmnailsComponent } from './components/thubmnails/thubmnails.component';
+import { ThumbnailsComponent } from './components/thumbnails/thumbnails.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ThubmnailsComponent
+    ThumbnailsComponent
   ],
   imports: [
     BrowserModule,

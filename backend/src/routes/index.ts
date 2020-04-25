@@ -1,7 +1,5 @@
 import { Dirent } from "fs";
 import {readExif} from '../utils/exifReader';
-import {imgInfo} from '../utils/imgInterface'
-
 
 const express = require('express');
 const router = express.Router();

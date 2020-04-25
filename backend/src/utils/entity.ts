@@ -7,3 +7,13 @@ export interface  imgInfo {
         dof: number,
     }
 }
+
+export interface  IMetaObject {
+  unit: string;
+  value: number;
+}
+
+export interface  IParseObject {
+  unit: string;
+  name: string;
+}
