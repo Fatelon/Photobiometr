@@ -11,41 +11,7 @@ const options = {
   }),
 }
 
-let keys = [
-<<<<<<< HEAD
-    'SourceFile',
-    'Make',
-    'Model',
-    'Orientation',
-    'XResolution',
-    'YResolution',
-    'ResolutionUnit',
-    'ModifyDate',
-    'ExifImageWidth',
-    'ExifImageHeight',
-    'ExposureTime',
-    'FNumber',
-    'ISO',
-    'FocalLength',
-    'FocalPlaneDiagonal',
-    'LensType',
-    'FocusDistance',
-    'LensInfo',
-    'LensModel',
-    'Megapixels',
-    'DOF',
-    'FOV',
-    'FocalLength35efl',
-    'HyperfocalDistance',
-    ];
-
-function parseExif(exifData) {
-    if (exifData.error) {
-        console.error(exifData.error);
-        return;
-    }
-    let outputMetadata = {}
-=======
+const keys = [
   'SourceFile',
   'Make',
   'Model',
@@ -54,6 +20,8 @@ function parseExif(exifData) {
   'YResolution',
   'ResolutionUnit',
   'ModifyDate',
+  'ExifImageWidth',
+  'ExifImageHeight',
   'ExposureTime',
   'FNumber',
   'ISO',
@@ -69,7 +37,6 @@ function parseExif(exifData) {
   'FocalLength35efl',
   'HyperfocalDistance',
 ];
->>>>>>> ed1b441ae1bdfe93dda7441062ef6a007cd919fc
 
 const parseObjects: IParseObject[] = [
   {
@@ -87,42 +54,6 @@ const parseObjects: IParseObject[] = [
   }
 ];
 
-<<<<<<< HEAD
-    let width = data['ExifImageWidth'];
-    outputMetadata['width'] = width;
-    let height = data['ExifImageHeight'];
-    outputMetadata['height'] = height;
-
-    let focusDistance = parseFloat(data['FocusDistance'].split(' ')[0]);
-    outputMetadata['FocusDistance']  = {
-        unit: 'm',
-        value: focusDistance
-    };
-    console.log('FocusDistance', data['FocusDistance'], focusDistance);
-
-    let dof = parseFloat(data['DOF'].split(' ')[0]);
-    outputMetadata['DOF']  = {
-        unit: 'm',
-        value: dof
-    };
-    console.log('DOF', data['DOF'], dof);
-
-
-    let fl = parseFloat(data['FocalLength'].split(' ')[0]);
-    console.log('FocalLength', data['FocalLength'], fl);
-    outputMetadata['FocalLength']  = {
-        unit: 'mm',
-        value: fl
-    };
-
-    let eflArr =  data['FocalLength35efl'].split(' ');
-    let efl = parseFloat(eflArr[eflArr.length - 2]);
-    outputMetadata['FocalLength35efl']  = {
-        unit: 'mm',
-        value: efl
-    };
-
-=======
 function parseExif(exifData) {
   if (exifData.error) {
     console.error(exifData.error);
@@ -136,7 +67,6 @@ function parseExif(exifData) {
       value: parseFloat(exifData.data[0][parseObj.name].split(' ')[0])
     } as IMetaObject;
   });
->>>>>>> ed1b441ae1bdfe93dda7441062ef6a007cd919fc
 
   return outputMetadata;
 }
@@ -159,5 +89,3 @@ export async function readExif(filePath) {
     .catch(console.error);
   return metadata;
 }
-
-
