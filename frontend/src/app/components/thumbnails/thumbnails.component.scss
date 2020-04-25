@@ -1,19 +1,26 @@
 .list {
   list-style-type: none;
   display: flex;
-  width: 800px;
-  overflow-x: scroll;
+  min-width: 800px;
+  overflow-x: auto;
+  li {
+    margin: 3px;
+  }
 }
-.list li {
-  margin: 3px;
+
+.editor {
+  display: flex;
+
+  app-edit-panel, .container, .info {
+    padding-left: .5em;
+  }
 }
-#container, #svg, .container {
-  position: absolute;
-  top: 150px;
-  left: 0;
-}
-.info {
-  position: absolute;
-  top: 150px;
-  left: 650px;
+
+.container {
+  height: 400px;
+  width: 600px;
+
+  div {
+    position: absolute;
+  }
 }

@@ -30,12 +30,12 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   points: Point[] = [];
   circles: any[] =  [];
 
-  draw;
+  drowingArea;
   img;
   drawImage;
 
-  @ViewChild('container') container: ElementRef;
-  @ViewChild('svg') svg: ElementRef;
+  @ViewChild('imgArea') imgArea: ElementRef;
+  @ViewChild('drowingArea') dArea: ElementRef;
 
   constructor(private readonly thubmnailsService: ThubmnailsService) {
 
@@ -44,7 +44,6 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.thubmnailsService.getThumbs().subscribe((res: string[]) => {
       this.items = res.map((item: any) => {
-        console.log(item.metadata);
         return {
           name: item.name,
           thumb: `http://localhost:3001/public/thumbnails/${item.name}`,
@@ -53,19 +52,21 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
         };
       });
       console.log(this.items);
+      this.setPicture(this.items[0]);
     });
 
 
   }
 
   ngAfterViewInit(): void {
-    this.drawImage = SVG().addTo(this.container.nativeElement).size(600, 400);
-    this.draw = SVG().addTo(this.svg.nativeElement).size(600, 400);
-    this.draw.on('click', this.svgClick.bind(this));
+    this.drawImage = SVG().addTo(this.imgArea.nativeElement).size(600, 400);
+    this.drowingArea = SVG().addTo(this.dArea.nativeElement).size(600, 400);
+    this.drowingArea.on('click', this.svgClick.bind(this));
+    // this.draw.click(this.svgClick);
   }
 
   setPicture(picture: Picture) {
-    const item: Picture = this.items.find(item => item.name === picture.name);
+    const item: Picture = this.items.find(it => it.name === picture.name);
     this.currentPicture = item;
     if (!this.img) {
       this.img = this.drawImage.image(item.foto);
@@ -81,7 +82,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       const point: Point = new Point(e.offsetX, e.offsetY);
       this.points.push(point);
 
-      const circle = this.draw.ellipse(4, 4).fill('#f06').move(point.X - 2, point.Y - 2);
+      const circle = this.drowingArea.ellipse(4, 4).fill('#f06').move(point.X - 2, point.Y - 2);
       // this.circles.push(circle);
       this.drawLines();
 
@@ -90,7 +91,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   drawLines() {
     const points = this.points;
     if (points.length % 2 == 0) {
-      const line = this.draw.line(
+      const line = this.drowingArea.line(
         points[points.length - 2].X,
         points[points.length - 2].Y,
         points[points.length - 1].X,
@@ -98,6 +99,11 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
         .stroke({width: 1, color: '#f06'});
         // this.lines.push(line);
     }
-}
+  }
+
+  clearDrawingArea(event) {
+    this.points = [];
+    this.drowingArea.clear();
+  }
 
 }
