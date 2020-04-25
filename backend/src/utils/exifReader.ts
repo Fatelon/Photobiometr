@@ -19,6 +19,8 @@ let keys = [
     'YResolution',
     'ResolutionUnit',
     'ModifyDate',
+    'ExifImageWidth',
+    'ExifImageHeight',
     'ExposureTime',
     'FNumber',
     'ISO',
@@ -43,6 +45,11 @@ function parseExif(exifData) {
     let outputMetadata = {}
 
     let data = exifData.data[0];
+
+    let width = data['ExifImageWidth'];
+    outputMetadata['width'] = width;
+    let height = data['ExifImageHeight'];
+    outputMetadata['height'] = height;
 
     let focusDistance = parseFloat(data['FocusDistance'].split(' ')[0]);
     outputMetadata['FocusDistance']  = {
@@ -70,9 +77,9 @@ function parseExif(exifData) {
     let efl = parseFloat(eflArr[eflArr.length - 2]);
     outputMetadata['FocalLength35efl']  = {
         unit: 'mm',
-        value: fl
+        value: efl
     };
-    console.log('FocalLength35efl', data['FocalLength35efl'], efl);
+
 
     return outputMetadata;
 }

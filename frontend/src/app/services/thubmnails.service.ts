@@ -15,4 +15,8 @@ export class ThubmnailsService {
   getThumbs() {
     return this.http.get('http://localhost:3001/');
   }
+
+  getCalculations (data) {
+    return this.http.post('http://localhost:3001/calc', data);
+  }
 }

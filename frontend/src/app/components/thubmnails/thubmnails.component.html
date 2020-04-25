@@ -1,47 +1,112 @@
-<div>
-    <ul class="list">
-        <li *ngFor="let item of items">
-            <img src="{{item.thumb}}" (click)="setPicture(item)" width="100"/>
-        </li>
-    </ul>
-</div>
+<div class="section">
+    <div class="header-tools">
+        <ul class="list">
+            <li *ngFor="let item of items">
+                <img src="{{item.thumb}}" (click)="setPicture(item)" width="100" />
+            </li>
+        </ul>
+    </div>
 
-<div>
-    <div #container class="container"></div>
-    <div #svg class="container"></div>
-</div>
+    <div class="main">
+        <div class="content">
+            <div #container class="container"></div>
+            <div #svg class="container"></div>
+        </div>
 
-<div class="info" *ngIf="currentPicture">
-    <h3>Exif Info</h3>
-    <p>
-        {{currentPicture.name}} <br>
-        Distance: {{currentPicture.metadata.distance.value}} {{currentPicture.metadata.distance.unit}} <br>
-        Focus Length: {{currentPicture.metadata.fl.value}} {{currentPicture.metadata.fl.unit}} <br>
-        Focus Length 35mm: {{currentPicture.metadata.efl.value}} {{currentPicture.metadata.efl.unit}} <br>
-        DOF: {{currentPicture.metadata.dof.value}} {{currentPicture.metadata.dof.unit}} <br>
-    </p>
+        <div class="info" *ngIf="currentPicture">
+            <h3>Exif Info</h3>
+            <p>
+                {{currentPicture.name}} <br>
+                Width: {{currentPicture.metadata.width}} px <br>
+                Height: {{currentPicture.metadata.height}} px <br>
+                Distance: {{currentPicture.metadata.distance.value}} {{currentPicture.metadata.distance.unit}} <br>
+                Focus Length: {{currentPicture.metadata.fl.value}} {{currentPicture.metadata.fl.unit}} <br>
+                Focus Length 35mm: {{currentPicture.metadata.efl.value}} {{currentPicture.metadata.efl.unit}} <br>
+                DOF: {{currentPicture.metadata.dof.value}} {{currentPicture.metadata.dof.unit}} <br>
+            </p>
+            <p *ngIf="showCalcSections">
+                Width: {{currentPicture['calc'].width}} m <br>
+                Height: {{currentPicture['calc'].height}} m <br>
+                Lines: {{getLengthLines()}}
+                
+            </p>
+            <button (click)="calculate()">Calculate</button>
+        </div>
+    </div>
+    <div class="footer-tools">
+        <button (click)="clearLines(true)">Clear Lines</button>
+        <button (click)="clearLines(false)">Clear Polylines</button>
+        <button >Clear Squares</button>
+        <label>
+            Measure type:
+            <select>
+                <option value="line">Line</option>
+                <option value="polyline">Polyline</option>
+                <option value="polygon">Polygon</option>
+            </select>
+        </label>
+        <label>
+            Fill color:
+            <select>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+            </select>
+        </label>
+        <label>
+            Label color:
+            <select>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+            </select>
+        </label>
+        <label>
+            Zoom: 
+            <input type="range" value="1" min="1" max="32" />
+        </label>
+    </div>
 </div>
 
 <style>
+
+  
+
+
+    .section {
+        display: flex;
+        flex-direction: column;
+    }
+
     .list {
         list-style-type: none;
         display: flex;
         width: 800px;
         overflow-x: scroll;
-    }    
+    }
+
     .list li {
         margin: 3px;
     }
-    #container, #svg, .container {
-        position: absolute;
-        top: 150px;
-        left: 0;
+
+    .main {
+        display: flex;
+        /*justify-content: space-between;*/
     }
-    .info {
-        position: absolute;
-        top: 150px;
-        left: 650px;
+
+    .content {
+        width: 700px;
+        height: 450px;
     }
+
+    #container,
+    #svg,
+    .container {
+        position: absolute;
+    }
+    .info {}
 </style>
-
-

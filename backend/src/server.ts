@@ -18,8 +18,10 @@ export interface NsEnvI {
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
+
 app.set('port', port);
 app.use(routes);
+global['exifs'] = {};
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
