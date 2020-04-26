@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,10 @@ export class ThumbnailsService {
   }
 
   getThumbs() {
-    return this.http.get('http://localhost:3001/');
+    return this.http.get(environment.serverPath);
   }
 
   getCalculations(data) {
-    return this.http.post('http://localhost:3001/calc', data);
+    return this.http.post(`${environment.serverPath}calc`, data);
   }
 }

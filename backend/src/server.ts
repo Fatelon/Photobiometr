@@ -1,6 +1,6 @@
 try {
   const config = require('../config');
-  Object.assign(process.env, config);
+  // Object.assign(process.env, config);
 } catch (e) {
   console.log('No config file');
 }
@@ -15,7 +15,7 @@ export interface NsEnvI {
   PORT: string;
 }
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const server = http.createServer(app);
 

@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 import { ThumbnailsService } from '../../services/thumbnails.service';
 import { SVG } from '@svgdotjs/svg.js';
 import { Point, IPicture } from '../entity';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-thumbnails',
@@ -59,8 +60,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       this.items = res.map((item: any) => {
         return {
           name: item.name,
-          thumb: `http://localhost:3001/public/thumbnails/${item.name}`,
-          photo: `http://localhost:3001/public/fotos/${item.name}`,
+          thumb: `${environment.serverPath}public/thumbnails/${item.name}`,
+          photo: `${environment.serverPath}public/fotos/${item.name}`,
           metadata: item.metadata
         };
       });
