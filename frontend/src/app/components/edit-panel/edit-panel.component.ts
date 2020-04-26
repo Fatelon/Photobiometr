@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-edit-panel',
@@ -7,7 +7,12 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class EditPanelComponent implements OnInit {
 
+  @Input() paletteColor;
+
   @Output() clearClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() colorChanged: EventEmitter<string> = new EventEmitter<string>();
+
+  public types: string[] = ['Segment', 'Polyline'];
 
   constructor() { }
 
@@ -16,6 +21,10 @@ export class EditPanelComponent implements OnInit {
 
   onClearClick(event) {
     this.clearClick.emit(event);
+  }
+
+  onColorChanged(event) {
+    this.colorChanged.emit(event.target.value);
   }
 
 }

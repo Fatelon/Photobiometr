@@ -8,7 +8,7 @@ export interface  imgInfo {
     }
 }
 
-export interface  IMetaObject {
+export interface  IMeasure {
   unit: string;
   value: number;
 }

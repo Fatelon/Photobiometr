@@ -1,3 +1,16 @@
-<mat-card>
-  <mat-icon matTooltip="Clear" (click)="onClearClick($event)">clear</mat-icon>
+<mat-card class="edit-panel">
+  <button mat-icon-button matTooltip="Clear" >
+    <mat-icon (click)="onClearClick($event)">clear</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Сolor selection">
+    <mat-icon
+      [ngStyle]="{ 'color': paletteColor }"
+      (click)="colorPicker.click()">color_lens</mat-icon>
+    <input #colorPicker class="hidden-input" matInput type="color" (input)="onColorChanged($event)">
+  </button>
+  <button mat-icon-button matTooltip="Drawing type">
+    <mat-select>
+      <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+    </mat-select>
+  </button>
 </mat-card>

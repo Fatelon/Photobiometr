@@ -6,25 +6,39 @@ import { AppComponent } from './app.component';
 import { ThumbnailsComponent } from './components/thumbnails/thumbnails.component';
 import { EditPanelComponent } from './components/edit-panel/edit-panel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ExifInfoComponent } from './components/exif-info/exif-info.component';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+
+const materialModules = [
+  MatTooltipModule,
+  MatCardModule,
+  MatIconModule,
+  MatTableModule,
+  MatButtonModule,
+  MatInputModule,
+  MatSelectModule
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     ThumbnailsComponent,
-    EditPanelComponent
+    EditPanelComponent,
+    ExifInfoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatTooltipModule,
-    MatCardModule,
-    MatIconModule
+    ...materialModules
   ],
   providers: [],
   bootstrap: [AppComponent]

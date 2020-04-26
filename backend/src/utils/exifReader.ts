@@ -1,4 +1,4 @@
-import { IMetaObject, IParseObject } from "./entity";
+import { IMeasure, IParseObject } from "./entity";
 import exiftool from 'node-exiftool';
 import exiftoolBin from 'dist-exiftool';
 
@@ -60,13 +60,16 @@ function parseExif(exifData) {
     return {};
   }
   const outputMetadata = {};
-
+  const data = exifData.data[0];
   parseObjects.forEach(parseObj => {
     outputMetadata[parseObj.name] = {
       unit: parseObj.unit,
-      value: parseFloat(exifData.data[0][parseObj.name].split(' ')[0])
-    } as IMetaObject;
+      value: parseFloat(data[parseObj.name].split(' ')[0])
+    } as IMeasure;
   });
+
+  outputMetadata['width'] = data['ExifImageWidth'];
+  outputMetadata['height'] = data['ExifImageHeight'];
 
   return outputMetadata;
 }

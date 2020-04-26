@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import {ThubmnailsService} from '../../services/thubmnails.service';
-import { SVG } from '@svgdotjs/svg.js'
+import {ThumbnailsService} from '../../services/thumbnails.service';
+import { SVG } from '@svgdotjs/svg.js';
 
 
 interface Picture {
@@ -38,7 +38,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
   lineCircles: any[]=  [];
   polyLineCircles: any[]=  [];
   polygonCircles: any[]=  [];
-  
+
   lines: any[]= [];
   lineLabels: any[]= [];
   polyline: Point[]= [];
@@ -65,7 +65,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
   @ViewChild('container') container: ElementRef;
   @ViewChild('svg') svg: ElementRef;
 
-  constructor(private ThubmnailsService: ThubmnailsService) { 
+  constructor(private ThubmnailsService: ThumbnailsService) {
     this.color = this.colors.green;
     this.colorLabel = this.colors.white;
   }
@@ -79,14 +79,14 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
           foto: `http://localhost:3001/public/fotos/${item.name}`,
           metadata: item.metadata
         }
-        
+
       });
       console.log(this.items);
     });
 
-    
+
   }
-  
+
   ngAfterViewInit (): void {
     this.drawImage = SVG().addTo(this.container.nativeElement).size(this.widthPx, this.heightPx);
     this.draw = SVG().addTo(this.svg.nativeElement).size(this.widthPx, this.heightPx);
@@ -116,13 +116,13 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
       this.drawLines();
   }
 
-  
+
   drawLines () {
     let points = this.linePoints;
     if (points.length % 2 == 0) {
       let line = this.draw.line(
-        points[points.length -2].X, 
-        points[points.length -2].Y, 
+        points[points.length -2].X,
+        points[points.length -2].Y,
         points[points.length -1].X,
         points[points.length -1].Y)
         .stroke({width: 1, color: this.color});
@@ -150,7 +150,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
       let x2 = plot[i + 1][0];
       let y2 = plot[i + 1][1];
       sum += Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2) * (y1 - y2));
-    } 
+    }
     return sum;
   }
 
@@ -191,7 +191,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
       let y = arr[0][1] + (arr[1][1] - arr[0][1]) / 2
 
       //let ang =  Math.atan(arr[1][1] - arr[0][1] / arr[1][0] - arr[0][0]) * 180 / Math.PI;
-      
+
 
       text.move(x, y);
       //text.rotate(ang);
