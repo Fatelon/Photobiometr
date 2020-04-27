@@ -26,15 +26,29 @@ async function  ResizeFile (name) {
     let fileIn = path.join(dirFotoName, name);
     let fileThumbOut = path.join(dirPublicThumbName, name);
     let fileFotoOut = path.join(dirPublicFotosName, name);
-    let buffer = await sharp(fileIn).toBuffer();
+    let image = await sharp(fileIn);
+    let buffer = await image.toBuffer();
     let aspect = 1;
 
+    await image
+        .metadata()
+        .then(metadata =>{
+            //console.log(metadata);
+            aspect = metadata.width / metadata.height;
+            console.log(aspect);
+        });
+
+        console.log(aspect);
     await sharp(buffer)  
-        .resize({width: thumbWidth})
+        .resize({
+            width: thumbWidth, 
+        })
         .toFile(fileThumbOut)
 
     await sharp(buffer)
-        .resize({width: imageWidth})
+        .resize({
+            width: imageWidth, 
+        })
         .toFile(fileFotoOut)
     
 }
@@ -52,14 +66,16 @@ router.get('/', async (req, res) => {
         let item = {
             name: file.name,
             metadata: {
-             distance: metadata["FocusDistance"],
-             efl: metadata["FocalLength35efl"],
-             fl: metadata["FocalLength"],
-             dof: metadata["DOF"],
-             width: metadata["width"],
-             height: metadata["height"],
-             imageWidth: imageWidth,
-         }
+                distance: metadata["FocusDistance"],
+                efl: metadata["FocalLength35efl"],
+                fl: metadata["FocalLength"],
+                dof: metadata["DOF"],
+                // accuracy 5% by lens +  0.5 * DOF / FocusDistance
+                accuracy: {value: (5 + 100 * 0.5 * metadata["DOF"].value / metadata["FocusDistance"].value).toFixed(2), unit: '%'},
+                width: metadata["width"],
+                height: metadata["height"],
+                imageWidth: imageWidth,
+        }
          }
 
        list.push(item);
@@ -74,15 +90,29 @@ router.get('/', async (req, res) => {
 }); 
 
 router.post('/calc', async (req, res) =>{
-    console.log(req.body);
-    console.log('exifs',  global['exifs']);
     let exif = global['exifs'][req.body.name];
     let calc = new Calculate(exif.metadata, req.body);
     let result = req.body;
     result['calc'] = {}; 
-    result['calc']['lines'] = req.body.lines.map(length => calc.getLength(length));
-    result['calc']['width'] = calc.horizontal;
-    result['calc']['height'] = calc.vertical;
+    //result['calc']['lines'] = req.body.lines.map(length => calc.getLength(length));
+    result['calc']['diagonal'] = {
+        value: calc.diagonal,
+        unit: 'm'
+    }
+    result['calc']['width'] = {
+        value: calc.horizontal,
+        unit: 'm'
+    }
+
+    result['calc']['height'] = {
+        value: calc.vertical,
+        unit: 'm'
+    }
+
+    result['calc']['ratio'] = {
+        value: calc.ratio,
+        unit: ''
+    }
 
     res.json(result);
 });

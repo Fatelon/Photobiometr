@@ -62,10 +62,21 @@ function parseExif(exifData) {
   const outputMetadata = {};
   const data = exifData.data[0];
   parseObjects.forEach(parseObj => {
-    outputMetadata[parseObj.name] = {
-      unit: parseObj.unit,
-      value: parseFloat(data[parseObj.name].split(' ')[0])
-    } as IMeasure;
+    if (parseObj.name == 'FocalLength35efl') {
+      //FocalLength35efl 283.0 mm (35 mm equivalent: 566.9 mm)
+      let field = data[parseObj.name];
+      let parseEnt = field.split(' ');
+      let value = parseFloat(parseEnt[parseEnt.length - 2]);
+      outputMetadata[parseObj.name] = {
+        unit: parseObj.unit,
+        value
+      } as IMeasure;
+    } else {
+      outputMetadata[parseObj.name] = {
+        unit: parseObj.unit,
+        value: parseFloat(data[parseObj.name].split(' ')[0])
+      } as IMeasure;
+    }
   });
 
   outputMetadata['width'] = data['ExifImageWidth'];
@@ -81,12 +92,11 @@ export async function readExif(filePath) {
     .then((pid) => console.log('Started exiftool process %s', pid))
     .then(() => ep.readMetadata(filePath, ['-File:all']))
     .then((data) => {
-      console.log('data', data);
+      //console.log('data', data);
       metadata = parseExif(data)
     }, console.error)
     .then(() => ep.close())
     .then(()=> {
-      console.log(metadata)
       return metadata
     })
     .catch(console.error);

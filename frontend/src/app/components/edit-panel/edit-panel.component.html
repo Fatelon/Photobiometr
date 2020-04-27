@@ -4,9 +4,15 @@
   </button>
   <button mat-icon-button matTooltip="Сolor selection">
     <mat-icon
-      [ngStyle]="{ 'color': paletteColor }"
+      [ngStyle]="{ 'color': paletteColor, 'backgroundColor': complColor}"
       (click)="colorPicker.click()">color_lens</mat-icon>
     <input #colorPicker class="hidden-input" matInput type="color" (input)="onColorChanged($event)">
+  </button>
+  <button mat-icon-button matTooltip="Text color selection">
+    <mat-icon
+      [ngStyle]="{ 'color': paletteTextColor, 'backgroundColor': complTextColor}"
+      (click)="colorPicker2.click()">color_lens</mat-icon>
+    <input #colorPicker2 class="hidden-input" matInput type="color" (input)="onColorTextChanged($event)">
   </button>
   <button mat-icon-button matTooltip="Drawing type">
     <mat-select>

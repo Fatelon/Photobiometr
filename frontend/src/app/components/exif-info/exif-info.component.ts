@@ -24,6 +24,9 @@ export class ExifInfoComponent implements OnInit {
     }, {
       label: 'DOF:',
       field: 'dof'
+    }, {
+      label: 'Accuracy:',
+      field: 'accuracy'
     }
   ];
 

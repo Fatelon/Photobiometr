@@ -60,7 +60,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
   img;
   drawImage;
   widthPx = 600;
-  heightPx = 400;
+  heightPx = 450;
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('svg') svg: ElementRef;
@@ -101,7 +101,7 @@ export class ThubmnailsComponent implements OnInit, AfterViewInit {
     console.log(this.img);
     if (!this.img) {
       this.img = this.drawImage.image(item.foto);
-      //this.img.size(this.widthPx,  this.widthPx * aspect);
+      this.img.size(this.widthPx,  this.widthPx * aspect);
     } else {
       this.img.load(item.foto);
     }

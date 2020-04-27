@@ -49,8 +49,16 @@ export class Calculate {
          * R - расстояние до объекта 
          */
         this.angle = 2 * Math.atan(0.5 * this.diagoanlMatrix /  this.efl);
+
+        console.log('diagonal matrix', this.diagoanlMatrix);
+        console.log('efl', this.efl)
+
         this.diagonal = 2 * this.distance * Math.tan(0.5 * this.angle);
         this.ratio = this.diagonal / this.diagonalPx;
+
+        console.log('distance', this.distance);
+        console.log('diagonal', this.diagonal);
+        console.log('ratio', this.ratio);
     }
 
     setMeterMeasures(metadata):void {

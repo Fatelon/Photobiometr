@@ -1,0 +1,26 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Measures Info</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+        <mat-table [dataSource]="fieldsToShow" class="mat-elevation-z0">
+    
+          <ng-container matColumnDef="label">
+            <mat-header-cell *matHeaderCellDef> label </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.label }} </mat-cell>
+          </ng-container>
+    
+          <ng-container matColumnDef="field">
+            <mat-header-cell *matHeaderCellDef> field </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ picture.calc[element.field].value }}
+              {{ picture.calc[element.field].unit }}
+            </mat-cell>
+          </ng-container>
+    
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+    

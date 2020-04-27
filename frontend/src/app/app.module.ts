@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MeasuresInfoComponent } from './components/measures-info/measures-info.component';
 
 const materialModules = [
   MatTooltipModule,
@@ -31,7 +32,8 @@ const materialModules = [
     AppComponent,
     ThumbnailsComponent,
     EditPanelComponent,
-    ExifInfoComponent
+    ExifInfoComponent,
+    MeasuresInfoComponent
   ],
   imports: [
     BrowserModule,

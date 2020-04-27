@@ -10,18 +10,26 @@
   <app-edit-panel
     *ngIf="currentPicture"
     [paletteColor]="userColor"
+    [paletteTextColor]="userTextColor"
     (clearClick)="onClearClick($event)"
-    (colorChanged)="onColorChanged($event)"></app-edit-panel>
+    (colorChanged)="onColorChanged($event)"
+    (colorTextChanged)="onColorTextChanged($event)"></app-edit-panel>
 
   <div class="container">
     <div #imgArea></div>
-    <div #drowingArea></div>
+    <div #drawingArea></div>
   </div>
 
-  <app-exif-info
-    class="info"
-    *ngIf="currentPicture"
-    [picture]="currentPicture"></app-exif-info>
-
+  <div class="infos">
+    <app-exif-info
+      class="info"
+      *ngIf="currentPicture"
+      [picture]="currentPicture"></app-exif-info>
+    <app-measures-info
+      class="info"
+      *ngIf="currentPicture"
+      [picture]="currentPicture"></app-measures-info>
+  </div>
+    
 </div>
 

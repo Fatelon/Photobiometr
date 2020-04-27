@@ -40,22 +40,28 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   color = '';
   colorLabel = '';
 
-  drowingArea;
+  drawingArea;
   img;
   drawImage;
   widthPx = 600;
-  heightPx = 400;
+  heightPx = 450;
+  diagonalPx = Math.sqrt(600*600 + 450*450);
 
-  public userColor = '#f06';
+  ratio: number  // retio meter to pixel
+
+  public userColor;
+  public userTextColor;
 
   @ViewChild('imgArea') imgArea: ElementRef;
-  @ViewChild('drowingArea') dArea: ElementRef;
+  @ViewChild('drawingArea') dArea: ElementRef;
 
   constructor(private readonly thubmnailsService: ThumbnailsService) {
 
   }
 
   ngOnInit(): void {
+    this.userColor = this.colors.green;
+    this.userTextColor = this.colors.white;
     this.thubmnailsService.getThumbs().subscribe((res: string[]) => {
       this.items = res.map((item: any) => {
         return {
@@ -68,23 +74,27 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       console.log(this.items);
       this.setPicture(this.items[0]);
     });
+
   }
 
   ngAfterViewInit(): void {
-    this.drawImage = SVG().addTo(this.imgArea.nativeElement).size(600, 400);
-    this.drowingArea = SVG().addTo(this.dArea.nativeElement).size(600, 400);
-    this.drowingArea.on('click', this.svgClick.bind(this));
+    this.drawImage = SVG().addTo(this.imgArea.nativeElement).size(this.widthPx, this.heightPx);
+    this.drawingArea = SVG().addTo(this.dArea.nativeElement).size(this.widthPx, this.heightPx);
+    this.drawingArea.on('click', this.svgClick.bind(this));
   }
 
   setPicture(picture: IPicture) {
-    // this.clearDrawingArea(); ?
+    this.clearDrawingArea();
+    this.ratio = 0;
     const item: IPicture = this.items.find(it => it.name === picture.name);
     this.currentPicture = item;
+    this.calculate();
     if (!this.img) {
       this.img = this.drawImage.image(item.photo);
     } else {
       this.img.load(item.photo);
     }
+
   }
 
   svgClick(e) {
@@ -94,8 +104,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       const point: Point = new Point(e.offsetX, e.offsetY);
       this.points.push(point);
 
-      const circle = this.drowingArea.ellipse(4, 4).fill(this.userColor).move(point.X - 2, point.Y - 2);
-      // this.circles.push(circle);
+      const circle = this.drawingArea.ellipse(4, 4).fill(this.userColor).move(point.X - 2, point.Y - 2);
+      this.lineCircles.push(circle);
       this.drawLines();
 
   }
@@ -103,25 +113,30 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   drawLines() {
     const points = this.points;
     if (points.length % 2 == 0) {
-      const line = this.drowingArea.line(
+      const line = this.drawingArea.line(
         points[points.length - 2].X,
         points[points.length - 2].Y,
         points[points.length - 1].X,
         points[points.length - 1].Y
       ).stroke({ width: 1, color: this.userColor });
       this.lines.push(line);
+      this.showLineLabels()
     }
   }
 
   // tools
   clearLines(isLine: boolean = true) {
-    if (isLine) {
+  //  if (isLine) {
       this.linePoints = [];
       this.lines.forEach(line => line.remove());
       this.lineCircles.forEach(circle => circle.remove());
-    } else {
+      this.lineLabels.forEach(label => label.remove());
+      this.lines = [];
+      this.lineCircles = [];
+      this.lineLabels = [];
+    //} else {
       this.polyLinePoints = [];
-    }
+    //}
   }
 
 
@@ -137,21 +152,34 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     return sum;
   }
 
+  getLength(lengthPx:number):number {
+    return this.currentPicture.calc.diagonal.value * lengthPx / this.diagonalPx;
+  }
+
   showLineLabels() {
     this.lineLabels.forEach(l => l.remove());
     this.lineLabels = [];
     this.lines.forEach((line, idx) => {
-      const text = this.drowingArea.text(`${this.currentPicture.calc.lines[idx].toFixed(4)} m`).font({fill: this.colorLabel});
+      let lengthPx = this.getLengthPx(line.plot());
+      let length = this.getLength(lengthPx);
+      const text = this.drawingArea.text(`${length.toFixed(4)} m`).font({fill: this.userTextColor});
       this.lineLabels.push(text);
       const arr = line.plot();
-      const x = arr[0][0] + (arr[1][0] - arr[0][0]) / 2;
-      const y = arr[0][1] + (arr[1][1] - arr[0][1]) / 2;
 
-      // let ang =  Math.atan(arr[1][1] - arr[0][1] / arr[1][0] - arr[0][0]) * 180 / Math.PI;
+      const X1 = arr[0][0];
+      const X2 = arr[1][0];
+      const Y1 = arr[0][1];
+      const Y2 = arr[1][1];
 
+      const x = X1 + (X2 - X1) / 2;
+      const y = Y1 + (Y2 - Y1) / 2;
+
+     let ang =  Math.atan( (Y2 - Y1) / (X2 - X1));
+     let deg = ang * 180 / Math.PI;
+     console.log('ang', ang, deg);
 
       text.move(x, y);
-      // text.rotate(ang);
+      //text.rotate(deg);
 
     });
   }
@@ -165,6 +193,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   }
 
   calculate() {
+    if (this.currentPicture == null) return;
     const data = {
       name: this.currentPicture.name,
       widthPx: this.widthPx,
@@ -184,7 +213,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   private clearDrawingArea() {
     this.points = [];
-    this.drowingArea.clear();
+    this.clearLines();
+    this.drawingArea.clear();
     // this.clearLines(); ?
   }
 
@@ -195,7 +225,18 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   public onColorChanged(newColor: string) {
     this.userColor = newColor;
+
+    this.lines.forEach((line) => {
+      //console.log(line);
+      line.stroke(this.userColor);
+    });
+    this.lineCircles.forEach((circle) => circle.fill(this.userColor));
+
     // Redraw..
   }
-
+  public onColorTextChanged(newColor: string) {
+    this.userTextColor = newColor;
+    this.lineLabels.forEach((text) => text.fill(this.userTextColor));
+    // Redraw..
+  }
 }
