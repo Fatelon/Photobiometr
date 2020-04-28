@@ -2,15 +2,15 @@
   <button mat-icon-button matTooltip="Clear" >
     <mat-icon (click)="onClearClick($event)">clear</mat-icon>
   </button>
-  <button mat-icon-button matTooltip="Сolor selection">
+  <button mat-icon-button matTooltip="Сolor selection" [ngStyle]="{ 'backgroundColor': complColor }">
     <mat-icon
-      [ngStyle]="{ 'color': paletteColor, 'backgroundColor': complColor}"
+      [ngStyle]="{ 'color': paletteColor }"
       (click)="colorPicker.click()">color_lens</mat-icon>
     <input #colorPicker class="hidden-input" matInput type="color" (input)="onColorChanged($event)">
   </button>
-  <button mat-icon-button matTooltip="Text color selection">
+  <button mat-icon-button matTooltip="Text color selection" [ngStyle]="{ 'backgroundColor': complTextColor }">
     <mat-icon
-      [ngStyle]="{ 'color': paletteTextColor, 'backgroundColor': complTextColor}"
+      [ngStyle]="{ 'color': paletteTextColor }"
       (click)="colorPicker2.click()">color_lens</mat-icon>
     <input #colorPicker2 class="hidden-input" matInput type="color" (input)="onColorTextChanged($event)">
   </button>

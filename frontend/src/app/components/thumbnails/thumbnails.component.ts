@@ -34,8 +34,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     red: '#ff0066',
     blue: '#0066ff',
     green: '#00ff66',
-    black: 'black',
-    white: 'white',
+    black: '#000000',
+    white: '#ffffff',
   };
   color = '';
   colorLabel = '';
@@ -45,9 +45,9 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   drawImage;
   widthPx = 600;
   heightPx = 450;
-  diagonalPx = Math.sqrt(600*600 + 450*450);
+  diagonalPx = Math.sqrt(600 * 600 + 450 * 450);
 
-  ratio: number  // retio meter to pixel
+  ratio: number;  // retio meter to pixel
 
   public userColor;
   public userTextColor;
@@ -112,7 +112,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   drawLines() {
     const points = this.points;
-    if (points.length % 2 == 0) {
+    if (points.length % 2 === 0) {
       const line = this.drawingArea.line(
         points[points.length - 2].X,
         points[points.length - 2].Y,
@@ -120,7 +120,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
         points[points.length - 1].Y
       ).stroke({ width: 1, color: this.userColor });
       this.lines.push(line);
-      this.showLineLabels()
+      this.showLineLabels();
     }
   }
 
@@ -134,9 +134,9 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       this.lines = [];
       this.lineCircles = [];
       this.lineLabels = [];
-    //} else {
+    // } else {
       this.polyLinePoints = [];
-    //}
+    // }
   }
 
 
@@ -152,7 +152,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     return sum;
   }
 
-  getLength(lengthPx:number):number {
+  getLength(lengthPx: number): number {
     return this.currentPicture.calc.diagonal.value * lengthPx / this.diagonalPx;
   }
 
@@ -160,8 +160,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     this.lineLabels.forEach(l => l.remove());
     this.lineLabels = [];
     this.lines.forEach((line, idx) => {
-      let lengthPx = this.getLengthPx(line.plot());
-      let length = this.getLength(lengthPx);
+      const lengthPx = this.getLengthPx(line.plot());
+      const length = this.getLength(lengthPx);
       const text = this.drawingArea.text(`${length.toFixed(4)} m`).font({fill: this.userTextColor});
       this.lineLabels.push(text);
       const arr = line.plot();
@@ -174,12 +174,12 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       const x = X1 + (X2 - X1) / 2;
       const y = Y1 + (Y2 - Y1) / 2;
 
-     let ang =  Math.atan( (Y2 - Y1) / (X2 - X1));
-     let deg = ang * 180 / Math.PI;
-     console.log('ang', ang, deg);
+      const ang =  Math.atan( (Y2 - Y1) / (X2 - X1));
+      const deg = ang * 180 / Math.PI;
+      console.log('ang', ang, deg);
 
       text.move(x, y);
-      //text.rotate(deg);
+      // text.rotate(deg);
 
     });
   }
@@ -193,7 +193,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   }
 
   calculate() {
-    if (this.currentPicture == null) return;
+    if (this.currentPicture == null) { return; }
     const data = {
       name: this.currentPicture.name,
       widthPx: this.widthPx,
@@ -227,7 +227,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     this.userColor = newColor;
 
     this.lines.forEach((line) => {
-      //console.log(line);
+      // console.log(line);
       line.stroke(this.userColor);
     });
     this.lineCircles.forEach((circle) => circle.fill(this.userColor));
