@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import ColorConvert from 'color-convert';
+import { FigureType } from '../entity';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-panel',
@@ -10,15 +12,17 @@ export class EditPanelComponent implements OnInit, AfterViewInit {
 
   @Input() paletteColor;
   @Input() paletteTextColor;
+  @Input() figureType: FigureType;
 
   @Output() clearClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() colorChanged: EventEmitter<string> = new EventEmitter<string>();
   @Output() colorTextChanged: EventEmitter<string> = new EventEmitter<string>();
+  @Output() figureChanged: EventEmitter<MatSelectChange> = new EventEmitter<MatSelectChange>();
 
   complColor: string;
   complTextColor: string;
 
-  public types: string[] = ['Segment', 'Polyline'];
+  public types: FigureType[] = ['Segment', 'Polyline', 'Polygon'];
 
   constructor() { }
 
@@ -29,6 +33,7 @@ export class EditPanelComponent implements OnInit, AfterViewInit {
   ngAfterViewInit () {
     this.complColor = this.checkColor(this.paletteColor);
     this.complTextColor = this.checkColor(this.paletteTextColor);
+
   }
 
   onClearClick(event) {
@@ -51,4 +56,8 @@ export class EditPanelComponent implements OnInit, AfterViewInit {
     this.complTextColor = this.checkColor(event.target.value);
   }
 
+  onFigureChanged(event) {
+    console.log(event);
+    this.figureChanged.emit(event);
+  }
 }

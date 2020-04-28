@@ -15,8 +15,8 @@
     <input #colorPicker2 class="hidden-input" matInput type="color" (input)="onColorTextChanged($event)">
   </button>
   <button mat-icon-button matTooltip="Drawing type">
-    <mat-select>
-      <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+    <mat-select (selectionChange)="onFigureChanged($event)">
+      <mat-option *ngFor="let figureType of types" [value]="figureType" >{{ figureType }}</mat-option>
     </mat-select>
   </button>
 </mat-card>

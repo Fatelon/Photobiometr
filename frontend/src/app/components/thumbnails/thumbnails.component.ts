@@ -1,8 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ThumbnailsService } from '../../services/thumbnails.service';
 import { SVG } from '@svgdotjs/svg.js';
-import { Point, IPicture } from '../entity';
+import { Point, IPicture, FigureType } from '../entity';
 import { environment } from '../../../environments/environment';
+import { MatSelectChange } from '@angular/material/select';
+import ColorConvert from 'color-convert';
 
 @Component({
   selector: 'app-thumbnails',
@@ -15,15 +17,18 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   // draw objects
   linePoints: Point[] = [];
-  polyLinePoints: Point[] = [];
+  polylinePoints: Point[] = [];
   polygonPoints: Point[] = [];
   lineCircles: any[] =  [];
-  polyLineCircles: any[] =  [];
+  polylineCircles: any[] =  [];
   polygonCircles: any[] =  [];
 
   lines: any[] = [];
   lineLabels: any[] = [];
-  polyline: Point[] = [];
+  polylineLabel: any;
+  polygonLabel: any;
+  polyline: any;
+  polygon: any;
 
   showCalcSections = false;
 
@@ -51,6 +56,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   public userColor;
   public userTextColor;
+  public figureType:FigureType = 'Segment';
 
   @ViewChild('imgArea') imgArea: ElementRef;
   @ViewChild('drawingArea') dArea: ElementRef;
@@ -99,15 +105,59 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   svgClick(e) {
 
-      console.log(e.offsetX, e.offsetY);
-
       const point: Point = new Point(e.offsetX, e.offsetY);
-      this.points.push(point);
+      
+      switch (this.figureType) {
+        case 'Segment':
+          this.points.push(point);
+          const circle = this.drawingArea.ellipse(4, 4).fill(this.userColor).move(point.X - 2, point.Y - 2);
+          this.lineCircles.push(circle);
+          this.drawLines();
+          break;
+        case 'Polyline':
+          this.polylinePoints.push(point);
+          const polyCircle = this.drawingArea.ellipse(4, 4).fill(this.userColor).move(point.X - 2, point.Y - 2);
+          this.polylineCircles.push(polyCircle);
+          this.drawPolylines();
+          break;
+        case 'Polygon':
+          this.polygonPoints.push(point);
+          const polygonCircle = this.drawingArea.ellipse(4, 4).fill(this.userColor).move(point.X - 2, point.Y - 2);
+          this.polygonCircles.push(polygonCircle);
+          this.drawPolygon();
+          break;
+      }
 
-      const circle = this.drawingArea.ellipse(4, 4).fill(this.userColor).move(point.X - 2, point.Y - 2);
-      this.lineCircles.push(circle);
-      this.drawLines();
+  }
 
+  drawPolygon () {
+    let points: number[][] = this.polygonPoints.map(p =>{
+       return [p.X, p.Y];
+    });
+    if (this.polygon == null) {
+        this.polygon = this.drawingArea.polygon();
+    } else {
+      this.polygon.plot(points);
+    }
+    let fillColor =  this.userColor + "55";
+    this.polygon.fill(fillColor);
+    this.polygon.stroke(this.userColor);
+    this.showPolygonLabel();
+  }
+
+
+  drawPolylines () {
+    let points: number[][] = this.polylinePoints.map(p =>{
+       return [p.X, p.Y];
+    });
+    if (this.polyline == null) {
+        this.polyline = this.drawingArea.polyline();
+    } else {
+      this.polyline.plot(points);
+    }
+    this.polyline.fill('none');
+    this.polyline.stroke(this.userColor);
+    this.showPolylineLabel();
   }
 
   drawLines() {
@@ -125,20 +175,25 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   }
 
   // tools
-  clearLines(isLine: boolean = true) {
-  //  if (isLine) {
+  clearLines() {
       this.linePoints = [];
-      this.lines.forEach(line => line.remove());
-      this.lineCircles.forEach(circle => circle.remove());
-      this.lineLabels.forEach(label => label.remove());
       this.lines = [];
       this.lineCircles = [];
       this.lineLabels = [];
-    //} else {
-      this.polyLinePoints = [];
-    //}
   }
 
+
+  clearPolyline() {
+    this.polylinePoints = [];
+    this.polyline = null;
+    this.polylineCircles = [];
+  }
+
+  clearPolygon() {
+    this.polygonPoints = [];
+    this.polygon = null;
+    this.polygonCircles = [];
+  }
 
   getLengthPx(plot: number[][]): number {
     let sum = 0;
@@ -180,8 +235,67 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
       text.move(x, y);
       //text.rotate(deg);
-
     });
+  }
+
+  showPolylineLabel () {
+    this.polylineLabel && this.polylineLabel.remove();
+     let sumLength = 0;
+     let points = this.polyline.plot();
+     for (let i = 0; i < points.length-1; i++) {
+       let plot = [points[i], points[i+1]];
+       let lengthPx = this.getLengthPx(plot);
+       let length = this.getLength(lengthPx);
+       sumLength += length;
+     }
+     this.polylineLabel = this.drawingArea.text(`${sumLength.toFixed(4)} m`).fill(this.userTextColor);
+     let minX = this.widthPx;
+     let maxX = 0;
+     let minY = this.heightPx;
+     let maxY = 0;
+     
+     this.polylinePoints.forEach((point => {
+       if (point.X > maxX) maxX = point.X;
+       if (point.Y > maxY) maxY = point.Y;
+       if (point.X < minX) minX = point.X;
+       if (point.Y < minY) minY = point.Y;
+     }))
+
+     let midX = (maxX + minX) / 2;
+     let midY = (maxY + minY) / 2;
+
+     this.polylineLabel.move(midX, midY);
+     
+  }
+
+  showPolygonLabel () {
+    this.polygonLabel && this.polygonLabel.remove();
+     let sumLength = 0;
+     let points = this.polygon.plot();
+     for (let i = 0; i < points.length-1; i++) {
+       let plot = [points[i], points[i+1]];
+       let lengthPx = this.getLengthPx(plot);
+       let length = this.getLength(lengthPx);
+       sumLength += length;
+     }
+     this.polygonLabel = this.drawingArea.text(`${sumLength.toFixed(4)} m`).fill(this.userTextColor);
+     let minX = this.widthPx;
+     let maxX = 0;
+     let minY = this.heightPx;
+     let maxY = 0;
+     
+     this.polygonPoints.forEach((point => {
+       if (point.X > maxX) maxX = point.X;
+       if (point.Y > maxY) maxY = point.Y;
+       if (point.X < minX) minX = point.X;
+       if (point.Y < minY) minY = point.Y;
+     }))
+
+     let midX = (maxX + minX) / 2;
+     let midY = (maxY + minY) / 2;
+
+     this.polygonLabel.move(midX, midY);
+     
   }
 
   getLengthLines() {
@@ -214,6 +328,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   private clearDrawingArea() {
     this.points = [];
     this.clearLines();
+    this.clearPolyline();
+    this.clearPolygon();
     this.drawingArea.clear();
     // this.clearLines(); ?
   }
@@ -238,5 +354,9 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     this.userTextColor = newColor;
     this.lineLabels.forEach((text) => text.fill(this.userTextColor));
     // Redraw..
+  }
+
+  public onFigureChanged (newFigure: MatSelectChange) {
+    this.figureType = newFigure.value;
   }
 }
