@@ -34,3 +34,5 @@ export interface IExifInfoObj {
   label: string;
   field: string;
 }
+
+export type FigureType = 'Segment' | 'Polyline' | 'Polygon';

@@ -11,7 +11,9 @@
     *ngIf="currentPicture"
     [paletteColor]="userColor"
     [paletteTextColor]="userTextColor"
+    [figureType] = "figureType"
     (clearClick)="onClearClick($event)"
+    (figureChanged)="onFigureChanged($event)"
     (colorChanged)="onColorChanged($event)"
     (colorTextChanged)="onColorTextChanged($event)"></app-edit-panel>
 
