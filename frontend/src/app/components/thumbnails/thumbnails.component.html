@@ -11,7 +11,7 @@
     *ngIf="currentPicture"
     [paletteColor]="userColor"
     [paletteTextColor]="userTextColor"
-    [figureType] = "figureType"
+    [figureType]="figureType"
     (clearClick)="onClearClick($event)"
     (figureChanged)="onFigureChanged($event)"
     (colorChanged)="onColorChanged($event)"
@@ -32,6 +32,6 @@
       *ngIf="currentPicture"
       [picture]="currentPicture"></app-measures-info>
   </div>
-    
+
 </div>
 

@@ -33,6 +33,8 @@ export class EditPanelComponent implements OnInit {
   @Output() colorChanged: EventEmitter<string> = new EventEmitter<string>();
   @Output() colorTextChanged: EventEmitter<string> = new EventEmitter<string>();
   @Output() figureChanged: EventEmitter<MatSelectChange> = new EventEmitter<MatSelectChange>();
+  @Output() zoomInClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() zoomOutClick: EventEmitter<any> = new EventEmitter<any>();
 
   complColor: string;
   complTextColor: string;
@@ -49,7 +51,7 @@ export class EditPanelComponent implements OnInit {
 
   checkColor(color: string): string {
     const hslColor = ColorConvert.hex.hsl(color);
-    return hslColor[2] < 60 ? 'WhiteSmoke' : 'SlateGrey';
+    return hslColor[2] < 70 ? 'WhiteSmoke' : 'SlateGrey';
   }
 
   onColorChanged(event) {
@@ -65,5 +67,13 @@ export class EditPanelComponent implements OnInit {
   onFigureChanged(event) {
     console.log(event);
     this.figureChanged.emit(event);
+  }
+
+  onZoomInClick(event) {
+    this.zoomInClick.emit();
+  }
+
+  onZoomOutClick(event) {
+    this.zoomOutClick.emit();
   }
 }

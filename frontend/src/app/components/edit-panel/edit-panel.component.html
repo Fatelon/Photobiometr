@@ -1,22 +1,37 @@
 <mat-card class="edit-panel">
-  <button mat-icon-button matTooltip="Clear" >
-    <mat-icon (click)="onClearClick($event)">clear</mat-icon>
+  <button mat-icon-button matTooltip="Clear" (click)="onClearClick($event)">
+    <mat-icon>clear</mat-icon>
   </button>
-  <button mat-icon-button matTooltip="Сolor selection" [ngStyle]="{ 'backgroundColor': complColor }">
-    <mat-icon
-      [ngStyle]="{ 'color': paletteColor }"
-      (click)="colorPicker.click()">color_lens</mat-icon>
+
+  <button mat-icon-button
+    matTooltip="Сolor selection"
+    (click)="colorPicker.click()"
+    [ngStyle]="{ 'backgroundColor': complColor }"
+  >
+    <mat-icon [ngStyle]="{ 'color': paletteColor }">color_lens</mat-icon>
     <input #colorPicker class="hidden-input" matInput type="color" (input)="onColorChanged($event)">
   </button>
-  <button mat-icon-button matTooltip="Text color selection" [ngStyle]="{ 'backgroundColor': complTextColor }">
-    <mat-icon
-      [ngStyle]="{ 'color': paletteTextColor }"
-      (click)="colorPicker2.click()">color_lens</mat-icon>
-    <input #colorPicker2 class="hidden-input" matInput type="color" (input)="onColorTextChanged($event)">
+
+  <button mat-icon-button
+    matTooltip="Text color selection"
+    (click)="textColorPicker.click()"
+    [ngStyle]="{ 'backgroundColor': complTextColor }"
+  >
+    <mat-icon [ngStyle]="{ 'color': paletteTextColor }">text_format</mat-icon>
+    <input #textColorPicker class="hidden-input" matInput type="color" (input)="onColorTextChanged($event)">
   </button>
+
   <button mat-icon-button matTooltip="Drawing type">
-    <mat-select (selectionChange)="onFigureChanged($event)">
-      <mat-option *ngFor="let figureType of types" [value]="figureType" >{{ figureType }}</mat-option>
+    <mat-select [(value)]="figureType" (selectionChange)="onFigureChanged($event)">
+      <mat-option *ngFor="let fType of types" [value]="fType">{{ fType }}</mat-option>
     </mat-select>
+  </button>
+
+  <button mat-icon-button matTooltip="Zoom In" (click)="zoomInClick($event)">
+    <mat-icon>zoom_in</mat-icon>
+  </button>
+
+  <button mat-icon-button matTooltip="Zoom Out" (click)="zoomOutClick($event)">
+    <mat-icon>zoom_out</mat-icon>
   </button>
 </mat-card>
