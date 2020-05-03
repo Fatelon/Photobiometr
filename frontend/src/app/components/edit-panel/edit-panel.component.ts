@@ -70,10 +70,10 @@ export class EditPanelComponent implements OnInit {
   }
 
   onZoomInClick(event) {
-    this.zoomInClick.emit();
+    this.zoomInClick.emit(event);
   }
 
   onZoomOutClick(event) {
-    this.zoomOutClick.emit();
+    this.zoomOutClick.emit(event);
   }
 }

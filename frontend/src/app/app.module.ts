@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MeasuresInfoComponent } from './components/measures-info/measures-info.component';
+import { MousewheelDirective } from './directives/mousewheel.directive';
 
 const materialModules = [
   MatTooltipModule,
@@ -33,7 +34,8 @@ const materialModules = [
     ThumbnailsComponent,
     EditPanelComponent,
     ExifInfoComponent,
-    MeasuresInfoComponent
+    MeasuresInfoComponent,
+    MousewheelDirective
   ],
   imports: [
     BrowserModule,

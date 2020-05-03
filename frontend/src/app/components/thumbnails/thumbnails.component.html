@@ -15,10 +15,13 @@
     (clearClick)="onClearClick($event)"
     (figureChanged)="onFigureChanged($event)"
     (colorChanged)="onColorChanged($event)"
-    (colorTextChanged)="onColorTextChanged($event)"></app-edit-panel>
+    (colorTextChanged)="onColorTextChanged($event)"
+    (zoomInClick)="onZoomInClick($event)"
+    (zoomOutClick)="onZoomOutClick($event)"></app-edit-panel>
 
-  <div class="container">
-    <div #imgArea></div>
+
+  <div class="container" mouseWheel  (mouseWheelUp)="onMouseWheelUp($event)" (mouseWheelDown)="onMouseWheelDown($event)">
+    <div #imgArea ></div>
     <div #drawingArea></div>
   </div>
 

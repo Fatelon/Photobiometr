@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { ThumbnailsService } from '../../services/thumbnails.service';
 import { SVG } from '@svgdotjs/svg.js';
+import '@svgdotjs/svg.draggable.js'
 import { Point, IPicture, FigureType } from '../entity';
 import { environment } from '../../../environments/environment';
 import { MatSelectChange } from '@angular/material/select';
@@ -35,6 +36,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   points: Point[] = [];
   circles: any[] =  [];
 
+  zoom: number = 1;
+
   colors = {
     red: '#ff0066',
     blue: '#0066ff',
@@ -44,6 +47,11 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
   };
   color = '';
   colorLabel = '';
+
+  _fillColor:string = '';
+  get fillColor():string {
+    return  this.userColor + "55";
+  }
 
   drawingArea;
   img;
@@ -97,6 +105,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     this.calculate();
     if (!this.img) {
       this.img = this.drawImage.image(item.photo);
+      
+      //this.img.scale(2,2);
     } else {
       this.img.load(item.photo);
     }
@@ -139,8 +149,8 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     } else {
       this.polygon.plot(points);
     }
-    let fillColor =  this.userColor + "55";
-    this.polygon.fill(fillColor);
+    
+    this.polygon.fill(this.fillColor);
     this.polygon.stroke(this.userColor);
     this.showPolygonLabel();
   }
@@ -193,6 +203,44 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     this.polygonPoints = [];
     this.polygon = null;
     this.polygonCircles = [];
+  }
+
+
+  getSquarePx (plot: number[][]): number {
+    if (plot.length < 3) return 0;
+    let square = 0;
+    let summ = 0;
+    let minus = 0;
+
+    for (let i = 0; i < plot.length; i++)
+    {
+
+
+        if (i + 1 < plot.length) {
+            summ += plot[i][0] * plot[i + 1][0];
+            minus += plot[i][0] * plot[i + 1][0];
+        } else
+        {
+            summ += plot[i][0] * plot[0][0];
+            minus += plot[i][0] * plot[0][0];
+        }
+    }
+
+    square = 0.5 * Math.abs(summ - minus);
+    return square;
+  }
+
+  getSquare(squarePx: number): number {
+    const width = this.currentPicture.calc.width.value;
+    const height = this.currentPicture.calc.height.value;
+    const widthPx = this.currentPicture.metadata.width;
+    const heightPx = this.currentPicture.metadata.height;
+    
+    const squareFrame = width * height;
+    const squareFramePx = widthPx * heightPx;
+
+    const square =  squarePx * squareFrame / squareFramePx 
+    return square;
   }
 
   getLengthPx(plot: number[][]): number {
@@ -269,15 +317,13 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   showPolygonLabel () {
     this.polygonLabel && this.polygonLabel.remove();
-     let sumLength = 0;
+     
      let points = this.polygon.plot();
-     for (let i = 0; i < points.length-1; i++) {
-       let plot = [points[i], points[i+1]];
-       let lengthPx = this.getLengthPx(plot);
-       let length = this.getLength(lengthPx);
-       sumLength += length;
-     }
-     this.polygonLabel = this.drawingArea.text(`${sumLength.toFixed(4)} m`).fill(this.userTextColor);
+     
+    const squarePx = this.getSquarePx(points);
+    const square = this.getSquare(squarePx);
+
+    this.polygonLabel = this.drawingArea.text(`${square.toFixed(8)} m`).fill(this.userTextColor);
      let minX = this.widthPx;
      let maxX = 0;
      let minY = this.heightPx;
@@ -345,17 +391,78 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       // console.log(line);
       line.stroke(this.userColor);
     });
+    
     this.lineCircles.forEach((circle) => circle.fill(this.userColor));
+    
+    this.polyline.stroke(this.userColor);
+    this.polylineCircles.forEach((circle) => circle.fill(this.userColor))
+
+    this.polygon.stroke(this.userColor);
+    this.polygon.fill(this.fillColor);
+    this.polygonCircles.forEach(polygonCircle => polygonCircle.fill(this.userColor));
 
     // Redraw..
   }
   public onColorTextChanged(newColor: string) {
     this.userTextColor = newColor;
     this.lineLabels.forEach((text) => text.fill(this.userTextColor));
+    this.polylineLabel.fill(this.userTextColor);
+    this.polygonCircles.fill(this.userTextColor);
+
     // Redraw..
   }
 
   public onFigureChanged(newFigure: MatSelectChange) {
     this.figureType = newFigure.value;
+  }
+
+  rescale (isUpScale: boolean) {
+    const scale = isUpScale ? 2 : 0.5
+    if (this.lines && this.lines.length) {
+      this.lines.forEach((line) => {line.plot(line.plot().map(coord => [coord[0] * scale, coord[1] * scale]))})
+      this.lineCircles.forEach((circle) => circle.move(circle.x() * scale, circle.y() * scale))
+      this.lineLabels.forEach(l => l.move(l.x() * scale, l.y() * scale))
+    }
+
+    if (this.polyline) {
+      this.polyline.plot(this.polyline.plot().map(coord => [coord[0] * scale, coord[1] * scale]));
+      this.polylineCircles.forEach(circle => circle.move(circle.x() * scale, circle.y() * scale));
+      this.polylineLabel.move(this.polylineLabel.x() * scale, this.polylineLabel.y() * scale);
+    }
+
+    if (this.polygon) {
+      this.polygon.plot(this.polygon.plot().map(coord => [coord[0] * scale, coord[1] * scale]));
+      this.polygonCircles.forEach(circle => circle.move(circle.x() * scale, circle.y() * scale));
+      this.polygonLabel.move(this.polygonLabel.x() * scale, this.polygonLabel.y() * scale);
+    }
+    
+  }
+
+  onMouseWheelUp (event) {
+    console.log(event);
+    if (this.zoom < 32) {
+      this.zoom *= 2;
+      //this.img.scale(2,2, event.clientX, event.clientY);
+      this.img.scale(2,2, this.widthPx/ 2, this.heightPx/ 2);
+      this.rescale(true);
+    }
+
+  }
+  onMouseWheelDown (event) {
+    console.log(event);
+    if (this.zoom > 1) {
+      this.zoom /= 2;
+      this.img.scale(0.5,0.5)
+      this.rescale(false);
+    }
+  }
+
+  
+
+  public onZoomInClick (event) {
+    console.log(event);
+  }
+  public onZoomOutClick (event) {
+    console.log(event);
   }
 }
