@@ -1,11 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ThumbnailsService } from '../../services/thumbnails.service';
 import { SVG } from '@svgdotjs/svg.js';
 import '@svgdotjs/svg.draggable.js'
 import { Point, IPicture, FigureType } from '../entity';
-import { environment } from '../../../environments/environment';
 import { MatSelectChange } from '@angular/material/select';
 import ColorConvert from 'color-convert';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-thumbnails',
@@ -105,7 +105,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     this.calculate();
     if (!this.img) {
       this.img = this.drawImage.image(item.photo);
-      
+
       //this.img.scale(2,2);
     } else {
       this.img.load(item.photo);
@@ -149,7 +149,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     } else {
       this.polygon.plot(points);
     }
-    
+
     this.polygon.fill(this.fillColor);
     this.polygon.stroke(this.userColor);
     this.showPolygonLabel();
@@ -235,11 +235,11 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     const height = this.currentPicture.calc.height.value;
     const widthPx = this.currentPicture.metadata.width;
     const heightPx = this.currentPicture.metadata.height;
-    
+
     const squareFrame = width * height;
     const squareFramePx = widthPx * heightPx;
 
-    const square =  squarePx * squareFrame / squareFramePx 
+    const square =  squarePx * squareFrame / squareFramePx
     return square;
   }
 
@@ -317,9 +317,9 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
 
   showPolygonLabel () {
     this.polygonLabel && this.polygonLabel.remove();
-     
+
      let points = this.polygon.plot();
-     
+
     const squarePx = this.getSquarePx(points);
     const square = this.getSquare(squarePx);
 
@@ -391,9 +391,9 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       // console.log(line);
       line.stroke(this.userColor);
     });
-    
+
     this.lineCircles.forEach((circle) => circle.fill(this.userColor));
-    
+
     this.polyline.stroke(this.userColor);
     this.polylineCircles.forEach((circle) => circle.fill(this.userColor))
 
@@ -435,7 +435,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
       this.polygonCircles.forEach(circle => circle.move(circle.x() * scale, circle.y() * scale));
       this.polygonLabel.move(this.polygonLabel.x() * scale, this.polygonLabel.y() * scale);
     }
-    
+
   }
 
   onMouseWheelUp (event) {
@@ -457,7 +457,7 @@ export class ThumbnailsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  
+
 
   public onZoomInClick (event) {
     console.log(event);
