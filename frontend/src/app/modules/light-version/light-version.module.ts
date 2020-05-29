@@ -1,17 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LightVersionComponent } from './light-version.component';
-import { SelectionSheetComponent } from './components/selection-sheet/selection-sheet.component';
+import { SelectPhotoComponent } from './components/select-photo/select-photo.component';
 import { LightVersionRoutingModule } from './light-version.routes';
+import { EditPanelComponent } from './components/edit-panel/edit-panel.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+
+const materialModules = [
+  MatTooltipModule,
+  MatCardModule,
+  MatIconModule,
+  MatTableModule,
+  MatButtonModule,
+  MatInputModule
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    LightVersionRoutingModule
+    LightVersionRoutingModule,
+    materialModules
   ],
   declarations: [
     LightVersionComponent,
-    SelectionSheetComponent
+    SelectPhotoComponent,
+    EditPanelComponent
   ]
 })
 export class LightVersionModule { }

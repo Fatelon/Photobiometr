@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { SelectionSheetComponent } from './selection-sheet.component';
+import { EditPanelComponent } from './edit-panel.component';
 
-describe('SelectionSheetComponent', () => {
-  let component: SelectionSheetComponent;
-  let fixture: ComponentFixture<SelectionSheetComponent>;
+describe('EditPanelComponent', () => {
+  let component: EditPanelComponent;
+  let fixture: ComponentFixture<EditPanelComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectionSheetComponent ]
+      declarations: [ EditPanelComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectionSheetComponent);
+    fixture = TestBed.createComponent(EditPanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

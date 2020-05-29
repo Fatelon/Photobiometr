@@ -1,0 +1,26 @@
+:host {
+  display: flex;
+  padding-left: .5em;
+}
+
+.edit-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden-input {
+  display: none;
+}
+
+button {
+  background-color: WhiteSmoke;
+  margin: .15em;
+}
+
+// .editor {
+//   display: flex;
+
+//   app-edit-panel, .container, .info {
+//     padding-left: .5em;
+//   }
+// }

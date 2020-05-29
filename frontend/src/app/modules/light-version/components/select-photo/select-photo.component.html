@@ -1,0 +1,5 @@
+<ul class="list">
+  <li *ngFor="let item of items">
+    <img src="{{ item.thumb }}" (click)="onItemClick(item)" alt=""/>
+  </li>
+</ul>

@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { ThumbnailsService } from '../../services/thumbnails.service';
+import { ThumbnailsService } from '../../../../services/thumbnails.service';
 import { SVG } from '@svgdotjs/svg.js';
 import '@svgdotjs/svg.draggable.js'
 import { Point, IPicture, FigureType } from '../entity';

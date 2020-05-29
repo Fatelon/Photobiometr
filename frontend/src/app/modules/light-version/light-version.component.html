@@ -1,5 +1,14 @@
-<p>
-  light-version works!
-</p>
+<div *ngIf="!currentPicture">Loading...</div>
 
-<app-selection-sheet></app-selection-sheet>
+<app-select-photo
+  [items]="pictureObjects"
+  (itemSelected)="onPictureChanged($event)"
+></app-select-photo>
+
+<app-edit-panel
+  *ngIf="currentPicture"
+  [paletteColor]="userColor"
+  (clearClick)="onClearClick($event)"
+  (colorChanged)="onColorChanged($event)"
+  (zoomInClick)="onZoomInClick($event)"
+  (zoomOutClick)="onZoomOutClick($event)"></app-edit-panel>
