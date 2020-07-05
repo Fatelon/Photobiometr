@@ -1,35 +1,38 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ThumbnailsService } from '../../services/thumbnails.service';
 import { Subject } from 'rxjs';
-import { IPictureObject } from './entities/picture-object';
 import { Colors } from './entities/constants';
 import { takeUntil } from 'rxjs/operators';
+import { InfoService } from './services/info.service';
+import { PictureObjectI } from './entities/picture-object';
 
 @Component({
   selector: 'app-light-version',
-  templateUrl: './light-version.component.html',
+  templateUrl: 'light-version.component.html',
+  styleUrls: ['light-version.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LightVersionComponent implements OnInit, OnDestroy {
 
-  pictureObjects: IPictureObject[] = [];
+  pictureObjects: PictureObjectI[] = [];
   needAutoSelect = true;
-  userColor: string = Colors.Green;
-  currentPicture: IPictureObject;
+  zoomScorer = 0;
+  userColor: string = Colors.Red;
+  currentPicture: PictureObjectI;
+  clearTrigger;
 
   private readonly destroy$ = new Subject();
 
   constructor(
-    private readonly thubmnailsService: ThumbnailsService,
+    private readonly infoService: InfoService,
     private readonly changeDetectorRef: ChangeDetectorRef
   ) {
-    this.thubmnailsService.getIPictureObjects()
+    this.infoService.getIPictureObjects()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((pictureObjects: IPictureObject[]) => {
+      .subscribe((pictureObjects: PictureObjectI[]) => {
         this.pictureObjects = pictureObjects;
         if (this.needAutoSelect && this.pictureObjects && this.pictureObjects.length > 0) {
           this.needAutoSelect = false;
-          this.currentPicture = this.pictureObjects[0];
+          this.onPictureChanged(this.pictureObjects[0]);
         }
         this.changeDetectorRef.markForCheck();
       });
@@ -38,12 +41,12 @@ export class LightVersionComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  onPictureChanged(item: IPictureObject) {
-    console.log('onPictureChanged', item);
+  onPictureChanged(item: PictureObjectI) {
     this.currentPicture = item;
   }
 
   onClearClick(event) {
+    this.clearTrigger = !this.clearTrigger;
   }
 
   onColorChanged(newColor: string) {
@@ -51,9 +54,11 @@ export class LightVersionComponent implements OnInit, OnDestroy {
   }
 
   onZoomInClick(event) {
+    this.zoomScorer += 1;
   }
 
   onZoomOutClick(event) {
+    this.zoomScorer -= 1;
   }
 
   ngOnDestroy() {

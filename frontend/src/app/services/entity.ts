@@ -1,4 +1,12 @@
 export interface IApiPictureObject {
   name: string;
-  metadata: any;
+  ratio: number;
+  imgPath: string;
+  thumbnailsPath: string;
+}
+
+export interface IPictureObject {
+  name: string;
+  thumb: string;
+  photo: string;
 }

@@ -1,6 +1,8 @@
 import path from 'path';
+import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
+import { calculate } from './light-version/calculation';
 
 class App {
   public express;
@@ -8,6 +10,7 @@ class App {
   constructor () {
     this.express = express();
     this.mountRoutes();
+    calculate();
   }
 
   private mountRoutes (): void {

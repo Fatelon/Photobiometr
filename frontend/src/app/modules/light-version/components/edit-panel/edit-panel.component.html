@@ -1,22 +1,26 @@
-<mat-card class="edit-panel">
-  <button mat-icon-button matTooltip="Clear" (click)="onClearClick($event)">
+<mat-card class="edit-panel mat-elevation-z2">
+  <!-- <button mat-icon-button matTooltip="Clear" (click)="onClearClick($event)">
     <mat-icon>clear</mat-icon>
+  </button> -->
+  <button mat-raised-button matTooltip="Return to original condition" (click)="onClearClick($event)">
+    <mat-icon>clear</mat-icon> Clear all
   </button>
 
-  <button mat-icon-button
-    matTooltip="Сolor selection"
+  <button mat-raised-button
+    matTooltip="Lines and text сolor"
     (click)="colorPicker.click()"
     [ngStyle]="{ 'backgroundColor': paletteBackgroundColor }"
   >
     <mat-icon [ngStyle]="{ 'color': paletteColor }">color_lens</mat-icon>
-    <input #colorPicker class="hidden-input" matInput type="color" (input)="onColorChanged($event)">
+    <input #colorPicker class="hidden-input" matInput type="color" (input)="onLinesColorChanged($event)">
+    Elements color
   </button>
 
-  <button mat-icon-button matTooltip="Zoom In" (click)="onZoomInClick($event)">
-    <mat-icon>zoom_in</mat-icon>
+  <button mat-raised-button matTooltip="Zoom In" (click)="onZoomInClick($event)">
+    <mat-icon>zoom_in</mat-icon> Zoom In
   </button>
 
-  <button mat-icon-button matTooltip="Zoom Out" (click)="onZoomOutClick($event)">
-    <mat-icon>zoom_out</mat-icon>
+  <button mat-raised-button matTooltip="Zoom Out" (click)="onZoomOutClick($event)">
+    <mat-icon>zoom_out</mat-icon> Zoom Out
   </button>
 </mat-card>

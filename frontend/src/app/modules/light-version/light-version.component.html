@@ -5,10 +5,19 @@
   (itemSelected)="onPictureChanged($event)"
 ></app-select-photo>
 
-<app-edit-panel
-  *ngIf="currentPicture"
-  [paletteColor]="userColor"
-  (clearClick)="onClearClick($event)"
-  (colorChanged)="onColorChanged($event)"
-  (zoomInClick)="onZoomInClick($event)"
-  (zoomOutClick)="onZoomOutClick($event)"></app-edit-panel>
+<div class="editor-container">
+  <app-edit-panel
+    *ngIf="currentPicture"
+    [paletteColor]="userColor"
+    (clearClick)="onClearClick($event)"
+    (colorChanged)="onColorChanged($event)"
+    (zoomInClick)="onZoomInClick($event)"
+    (zoomOutClick)="onZoomOutClick($event)"></app-edit-panel>
+
+  <app-drawing-area
+    *ngIf="currentPicture"
+    [lineColor]="userColor"
+    [zoomScorer]="zoomScorer"
+    [clearTrigger]="clearTrigger"
+    [background]="currentPicture"></app-drawing-area>
+</div>

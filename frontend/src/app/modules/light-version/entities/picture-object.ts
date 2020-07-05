@@ -1,5 +1,8 @@
-export interface IPictureObject {
+export interface PictureObjectI {
   name: string;
-  thumb: string;
-  photo: string;
+  ratio: number;
+  width: number;
+  height: number;
+  imgPath: string;
+  thumbnailsPath: string;
 }

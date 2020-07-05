@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { IPictureObject } from '../modules/light-version/entities/picture-object';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IApiPictureObject } from './entity';
+import { IApiPictureObject, IPictureObject } from './entity';
 
 @Injectable({
   providedIn: 'root'

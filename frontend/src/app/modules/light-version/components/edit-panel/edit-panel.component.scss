@@ -1,11 +1,18 @@
 :host {
   display: flex;
-  padding-left: .5em;
+  margin: 0 .7em;
+  align-items: baseline;
 }
 
 .edit-panel {
   display: flex;
   flex-direction: column;
+
+  button {
+    display: flex;
+    justify-content: left;
+    margin: .5em 0;
+  }
 }
 
 .hidden-input {
@@ -16,11 +23,3 @@ button {
   background-color: WhiteSmoke;
   margin: .15em;
 }
-
-// .editor {
-//   display: flex;
-
-//   app-edit-panel, .container, .info {
-//     padding-left: .5em;
-//   }
-// }

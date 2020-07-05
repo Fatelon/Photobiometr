@@ -5,7 +5,7 @@ import exiftoolBin from 'dist-exiftool';
 const ep = new exiftool.ExiftoolProcess(exiftoolBin);
 
 const options = {
-  detached: true,
+  detached: false,
   env: Object.assign({}, process.env, {
     ENVIRONMENT_VARIABLE: 1,
   }),

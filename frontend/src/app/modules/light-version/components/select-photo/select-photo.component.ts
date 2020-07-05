@@ -1,23 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IPictureObject } from '../../entities/picture-object';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { PictureObjectI } from '../../entities/picture-object';
 
 @Component({
   selector: 'app-select-photo',
   templateUrl: './select-photo.component.html',
-  styleUrls: ['./select-photo.component.scss']
+  styleUrls: ['./select-photo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPhotoComponent implements OnInit {
 
-  @Input() items: IPictureObject[];
+  @Input() items: PictureObjectI[];
 
-  @Output() itemSelected = new EventEmitter<IPictureObject>();
+  @Output() itemSelected = new EventEmitter<PictureObjectI>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  onItemClick(item: IPictureObject) {
+  onItemClick(item: PictureObjectI) {
     this.itemSelected.emit(item);
   }
 

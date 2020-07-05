@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import ColorConvert from 'color-convert';
 
 @Component({
   selector: 'app-edit-panel',
   templateUrl: './edit-panel.component.html',
-  styleUrls: ['./edit-panel.component.scss']
+  styleUrls: ['./edit-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditPanelComponent implements OnInit {
 
@@ -38,7 +39,12 @@ export class EditPanelComponent implements OnInit {
     this.clearClick.emit(event);
   }
 
-  onColorChanged(event) {
+  // onColorChanged(event) {
+  //   this.colorChanged.emit(event.target.value);
+  //   this.paletteBackgroundColor = event.target.value;
+  // }
+
+  onLinesColorChanged(event) {
     this.colorChanged.emit(event.target.value);
     this.paletteBackgroundColor = event.target.value;
   }

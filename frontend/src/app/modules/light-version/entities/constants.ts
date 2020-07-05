@@ -5,3 +5,9 @@ export enum Colors {
   Black = '#000000',
   White = '#ffffff'
 }
+
+const UNITS = {
+  m: 1,
+  cm: 0.01,
+  mm: 0.001
+};

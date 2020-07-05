@@ -18,6 +18,8 @@ let dirFotoName = path.join(__dirname, '../../fotos');
 let dirPublicThumbName = path.join(__dirname, '../../public/thumbnails')
 let dirPublicFotosName = path.join(__dirname, '../../public/fotos')
 
+const lightDirFotoName = path.join(__dirname, '../../fotos/light');
+
 const thumbWidth = 150;
 const imageWidth = 600;
 
@@ -116,5 +118,9 @@ router.post('/calc', async (req, res) =>{
 
     res.json(result);
 });
+
+router.get('/light', async (req, res) => {
+    res.json(global['imagesInfo']);
+}); 
 
 module.exports = router;

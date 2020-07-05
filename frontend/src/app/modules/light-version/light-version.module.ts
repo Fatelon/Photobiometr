@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { DrawingAreaComponent } from './components/drawing-area/drawing-area.component';
 
 const materialModules = [
   MatTooltipModule,
@@ -29,7 +30,8 @@ const materialModules = [
   declarations: [
     LightVersionComponent,
     SelectPhotoComponent,
-    EditPanelComponent
+    EditPanelComponent,
+    DrawingAreaComponent
   ]
 })
 export class LightVersionModule { }
