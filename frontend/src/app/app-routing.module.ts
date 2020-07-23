@@ -3,11 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'old',
     loadChildren: () => import('./modules/staticphotos/static-photos.module').then(m => m.StaticPhotosModule)
   },
   {
-    path: 'light',
+    path: '',
     loadChildren: () => import('./modules/light-version/light-version.module').then(m => m.LightVersionModule)
   }
 ];

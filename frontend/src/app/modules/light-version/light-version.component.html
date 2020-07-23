@@ -8,15 +8,18 @@
 <div class="editor-container">
   <app-edit-panel
     *ngIf="currentPicture"
-    [paletteColor]="userColor"
+    [lineColor]="userLineColor"
+    [textColor]="userTextColor"
     (clearClick)="onClearClick($event)"
-    (colorChanged)="onColorChanged($event)"
+    (lineColorChanged)="onLineColorChanged($event)"
+    (textColorChanged)="onTextColorChanged($event)"
     (zoomInClick)="onZoomInClick($event)"
     (zoomOutClick)="onZoomOutClick($event)"></app-edit-panel>
 
   <app-drawing-area
     *ngIf="currentPicture"
-    [lineColor]="userColor"
+    [lineColor]="userLineColor"
+    [textColor]="userTextColor"
     [zoomScorer]="zoomScorer"
     [clearTrigger]="clearTrigger"
     [background]="currentPicture"></app-drawing-area>

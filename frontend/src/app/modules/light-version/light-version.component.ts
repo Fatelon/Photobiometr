@@ -16,7 +16,8 @@ export class LightVersionComponent implements OnInit, OnDestroy {
   pictureObjects: PictureObjectI[] = [];
   needAutoSelect = true;
   zoomScorer = 0;
-  userColor: string = Colors.Red;
+  userLineColor: string = Colors.Red;
+  userTextColor: string = Colors.Blue;
   currentPicture: PictureObjectI;
   clearTrigger;
 
@@ -49,8 +50,12 @@ export class LightVersionComponent implements OnInit, OnDestroy {
     this.clearTrigger = !this.clearTrigger;
   }
 
-  onColorChanged(newColor: string) {
-    this.userColor = newColor;
+  onLineColorChanged(newColor: string) {
+    this.userLineColor = newColor;
+  }
+
+  onTextColorChanged(newColor: string) {
+    this.userTextColor = newColor;
   }
 
   onZoomInClick(event) {

@@ -7,13 +7,23 @@
   </button>
 
   <button mat-raised-button
-    matTooltip="Lines and text сolor"
-    (click)="colorPicker.click()"
-    [ngStyle]="{ 'backgroundColor': paletteBackgroundColor }"
+    matTooltip="Lines сolor"
+    (click)="lineColorPicker.click()"
+    [ngStyle]="{ 'backgroundColor': linePaletteBackgroundColor }"
   >
-    <mat-icon [ngStyle]="{ 'color': paletteColor }">color_lens</mat-icon>
-    <input #colorPicker class="hidden-input" matInput type="color" (input)="onLinesColorChanged($event)">
-    Elements color
+    <mat-icon [ngStyle]="{ 'color': lineColor }">color_lens</mat-icon>
+    <input #lineColorPicker class="hidden-input" matInput type="color" (input)="onLinesColorChanged($event)">
+    Line color
+  </button>
+
+  <button mat-raised-button
+    matTooltip="Text сolor"
+    (click)="textColorPicker.click()"
+    [ngStyle]="{ 'backgroundColor': textPaletteBackgroundColor }"
+  >
+    <mat-icon [ngStyle]="{ 'color': textColor }">color_lens</mat-icon>
+    <input #textColorPicker class="hidden-input" matInput type="color" (input)="onTextColorChanged($event)">
+    Text color
   </button>
 
   <button mat-raised-button matTooltip="Zoom In" (click)="onZoomInClick($event)">

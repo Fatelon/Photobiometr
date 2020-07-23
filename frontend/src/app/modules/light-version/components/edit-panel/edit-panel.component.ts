@@ -9,21 +9,32 @@ import ColorConvert from 'color-convert';
 })
 export class EditPanelComponent implements OnInit {
 
-  private pColor: string;
-  @Input() set paletteColor(color) {
-    this.pColor = color;
-    this.paletteBackgroundColor = this.checkColor(color);
+  private lColor: string;
+  @Input() set lineColor(color) {
+    this.lColor = color;
+    this.linePaletteBackgroundColor = this.checkColor(color);
   }
-  get paletteColor() {
-    return this.pColor;
+  get lineColor() {
+    return this.lColor;
+  }
+
+  private txtColor: string;
+  @Input() set textColor(color) {
+    this.txtColor = color;
+    this.textPaletteBackgroundColor = this.checkColor(color);
+  }
+  get textColor() {
+    return this.txtColor;
   }
 
   @Output() clearClick = new EventEmitter<any>();
-  @Output() colorChanged = new EventEmitter<string>();
+  @Output() lineColorChanged = new EventEmitter<string>();
+  @Output() textColorChanged = new EventEmitter<string>();
   @Output() zoomInClick = new EventEmitter<any>();
   @Output() zoomOutClick = new EventEmitter<any>();
 
-  paletteBackgroundColor = '';
+  linePaletteBackgroundColor = '';
+  textPaletteBackgroundColor = '';
 
   constructor() { }
 
@@ -39,14 +50,14 @@ export class EditPanelComponent implements OnInit {
     this.clearClick.emit(event);
   }
 
-  // onColorChanged(event) {
-  //   this.colorChanged.emit(event.target.value);
-  //   this.paletteBackgroundColor = event.target.value;
-  // }
-
   onLinesColorChanged(event) {
-    this.colorChanged.emit(event.target.value);
-    this.paletteBackgroundColor = event.target.value;
+    this.lineColorChanged.emit(event.target.value);
+    this.linePaletteBackgroundColor = event.target.value;
+  }
+
+  onTextColorChanged(event) {
+    this.textColorChanged.emit(event.target.value);
+    this.textPaletteBackgroundColor = event.target.value;
   }
 
   onZoomInClick(event) {
