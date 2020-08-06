@@ -6,6 +6,7 @@ import '@svgdotjs/svg.panzoom.js';
 import { PictureObjectI } from '../../entities/picture-object';
 import { Colors } from '../../entities/constants';
 import { PointWithDrawingI } from '../../entities/point.entities';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-drawing-area',
@@ -62,13 +63,13 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
   private drawingPolyine: Polyline;
   private drawingText: Text;
   private linePoints: PointWithDrawingI[] = [];
-
   private currentImage: PictureObjectI;
-
   private predClickPoint: Point = new Point();
+  private polygonArea = 0.0;
 
   private readonly widthPx = 1080; // 600, 1080, 1200.
   private readonly heightPx = 810; // 450, 810, 900.
+  private readonly diagonalPx = Math.sqrt(Math.pow(this.widthPx, 2) + Math.pow(this.heightPx, 2));
   private readonly clickDelta = 5; // px
   private readonly lineWidth = 1;
   private readonly zoomMin = 1;
@@ -138,7 +139,7 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private redraw() {
     if (!this.drawingArea) { return; }
-
+    this.setCalculatedArea();
     this.drawPolyline();
     this.onLengthChange();
   }
@@ -146,12 +147,11 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
   private onLengthChange(): void {
     const lineLengthPx = this.linePoints.reduce((length, point, index, points) =>
       length + (index > 0 ? this.findDistance(point.point, points[index - 1].point) : 0), 0);
-    const diagonalPx = Math.sqrt(Math.pow(this.widthPx, 2) + Math.pow(this.heightPx, 2));
-    const realLength = lineLengthPx * this.currentImage.ratio / diagonalPx;
+    const realLength = lineLengthPx * this.currentImage.ratio / this.diagonalPx;
 
     this.sqrtLengthChange.emit(realLength);
 
-    this.drawLineLength(realLength * 100);
+    this.drawLineLengthText(realLength * 100);
   }
 
   private drawPolyline(): void {
@@ -167,11 +167,14 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
       .stroke(this.lineColor);
   }
 
-  private drawLineLength(lineLength: number): void {
+  private drawLineLengthText(lineLength: number): void {
     if (!this.linePoints || !this.linePoints.length || !this.drawingText) { return; }
 
     const lastPoint = this.linePoints[this.linePoints.length - 1].point || new Point(0, 0);
-    const text = lineLength ? `${lineLength.toFixed(2)} сm` : '';
+    let text = lineLength ? `L=${lineLength.toFixed(2)} сm` : '';
+    if (text && this.polygonArea) {
+      text += `; S=${this.polygonArea.toFixed(2)} cm^2`;
+    }
     this.drawingText
       .text(text)
       .font({fill: this.textColor})
@@ -183,6 +186,7 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.toDefault();
     const scale = this.widthPx / this.currentImage.width;
+    // this.drawingBackground.load(`${environment.serverPath}public/loader.png`);
     this.drawingBackground.load(this.currentImage.imgPath).scale(scale);
   }
 
@@ -199,16 +203,32 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
     let newZoom = currentZoom + zoomSign * this.zoomFactor;
     newZoom = Math.min(newZoom, this.zoomMax);
     newZoom = Math.max(newZoom, this.zoomMin);
-    // console.log('zoomScorer', zoomSign, currentZoom, newZoom);
     if (newZoom !== currentZoom) {
       this.drawingArea.animate().zoom(newZoom);
     }
+  }
+
+  private setCalculatedArea(): void {
+    const points = this.linePoints;
+
+    if (points.length < 2) { return; }
+
+    let area = 0.0;
+    let prevPoint = points[points.length - 1].point;
+    points.forEach(pointObject => {
+      const currentPoint = pointObject.point;
+      area += (prevPoint.x + currentPoint.x) * (prevPoint.y - currentPoint.y);
+      prevPoint = currentPoint;
+    });
+    const squareRatio = Math.pow(this.currentImage.ratio / this.diagonalPx * 100, 2);
+    this.polygonArea = 0.5 * Math.abs( area) * squareRatio;
   }
 
   private toDefault(): void {
     this.linePoints = [];
     this.drawingArea.viewbox(0, 0, this.widthPx, this.heightPx).zoom(1);
     this.drawingArea.clear();
+    this.drawingArea.image(`${environment.serverPath}public/loader.png`);
     this.drawingBackground = this.drawingArea.image();
     this.drawingPolyine = this.drawingArea.polyline();
     this.drawingText = this.drawingArea.text('');
