@@ -14,7 +14,8 @@
     (lineColorChanged)="onLineColorChanged($event)"
     (textColorChanged)="onTextColorChanged($event)"
     (zoomInClick)="onZoomInClick($event)"
-    (zoomOutClick)="onZoomOutClick($event)"></app-edit-panel>
+    (zoomOutClick)="onZoomOutClick($event)"
+    (infoViewModeChange)="onInfoViewModeChange($event)"></app-edit-panel>
 
   <app-drawing-area
     *ngIf="currentPicture"
@@ -22,5 +23,6 @@
     [textColor]="userTextColor"
     [zoomScorer]="zoomScorer"
     [clearTrigger]="clearTrigger"
-    [background]="currentPicture"></app-drawing-area>
+    [background]="currentPicture"
+    [infoViewMode]="infoViewMode"></app-drawing-area>
 </div>

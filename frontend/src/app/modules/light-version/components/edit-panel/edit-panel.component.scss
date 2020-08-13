@@ -4,6 +4,19 @@
   align-items: baseline;
 }
 
+.view-mode-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: .5em;
+  font-size: 15px;
+  font-weight: 500;
+
+  .view-mode-section-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .edit-panel {
   display: flex;
   flex-direction: column;

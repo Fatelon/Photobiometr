@@ -33,4 +33,12 @@
   <button mat-raised-button matTooltip="Zoom Out" (click)="onZoomOutClick($event)">
     <mat-icon>zoom_out</mat-icon> Zoom Out
   </button>
+
+  <section class="view-mode-section" matTooltip="Choose information view mode" matTooltipShowDelay="500">
+    <mat-radio-group class="view-mode-section-buttons" (change)="onViewModeChange($event)" [value]="viewModeFieldValue">
+      <mat-radio-button *ngFor="let type of viewModeTypeKeys" class="margin-top-05" [value]="type">
+        Show {{ ViewModeType[type] }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </section>
 </mat-card>

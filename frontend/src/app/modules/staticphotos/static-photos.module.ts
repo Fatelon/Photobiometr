@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+
 import { StaticPhotosRoutingModule } from './static-photos.routes';
 
 const materialModules = [

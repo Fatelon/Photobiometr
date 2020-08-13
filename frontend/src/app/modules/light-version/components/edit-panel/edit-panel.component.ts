@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import ColorConvert from 'color-convert';
+import { MatRadioChange } from '@angular/material/radio';
+import { InfoViewModeType } from '../../entities/common';
 
 @Component({
   selector: 'app-edit-panel',
@@ -8,6 +10,10 @@ import ColorConvert from 'color-convert';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditPanelComponent implements OnInit {
+
+  public ViewModeType = InfoViewModeType;
+  public viewModeTypeKeys = Object.keys(InfoViewModeType);
+  public viewModeFieldValue = InfoViewModeType.length;
 
   private lColor: string;
   @Input() set lineColor(color) {
@@ -32,6 +38,7 @@ export class EditPanelComponent implements OnInit {
   @Output() textColorChanged = new EventEmitter<string>();
   @Output() zoomInClick = new EventEmitter<any>();
   @Output() zoomOutClick = new EventEmitter<any>();
+  @Output() infoViewModeChange = new EventEmitter<InfoViewModeType>();
 
   linePaletteBackgroundColor = '';
   textPaletteBackgroundColor = '';
@@ -66,6 +73,10 @@ export class EditPanelComponent implements OnInit {
 
   onZoomOutClick(event) {
     this.zoomOutClick.emit(event);
+  }
+
+  onViewModeChange(event: MatRadioChange) {
+    this.infoViewModeChange.emit(event.value);
   }
 
 }

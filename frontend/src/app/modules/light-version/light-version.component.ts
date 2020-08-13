@@ -4,6 +4,7 @@ import { Colors } from './entities/constants';
 import { takeUntil } from 'rxjs/operators';
 import { InfoService } from './services/info.service';
 import { PictureObjectI } from './entities/picture-object';
+import { InfoViewModeType } from './entities/common';
 
 @Component({
   selector: 'app-light-version',
@@ -16,6 +17,7 @@ export class LightVersionComponent implements OnInit, OnDestroy {
   pictureObjects: PictureObjectI[] = [];
   needAutoSelect = true;
   zoomScorer = 0;
+  infoViewMode = InfoViewModeType.length;
   userLineColor: string = Colors.Red;
   userTextColor: string = Colors.Blue;
   currentPicture: PictureObjectI;
@@ -64,6 +66,10 @@ export class LightVersionComponent implements OnInit, OnDestroy {
 
   onZoomOutClick(event) {
     this.zoomScorer -= 1;
+  }
+
+  onInfoViewModeChange(newValue: InfoViewModeType) {
+    this.infoViewMode = newValue;
   }
 
   ngOnDestroy() {

@@ -7,6 +7,7 @@ import { PictureObjectI } from '../../entities/picture-object';
 import { Colors } from '../../entities/constants';
 import { PointWithDrawingI } from '../../entities/point.entities';
 import { environment } from '../../../../../environments/environment';
+import { InfoViewModeType } from '../../entities/common';
 
 @Component({
   selector: 'app-drawing-area',
@@ -44,6 +45,16 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
   get zoomScorer() {
     return this.zScorer;
   }
+
+  private iViewMode = InfoViewModeType.length;
+  @Input() set infoViewMode(infoViewMode) {
+    this.iViewMode = infoViewMode;
+    this.redraw();
+  }
+  get infoViewMode() {
+    return this.iViewMode;
+  }
+
   @Input() set clearTrigger(clearTrigger: boolean) {
     if (clearTrigger !== undefined) {
       this.toDefault();
@@ -55,8 +66,6 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentImage = newImage;
     this.setBackgroundImage();
   }
-
-  @Output() sqrtLengthChange = new EventEmitter<any>();
 
   private drawingArea;
   private drawingBackground: Image;
@@ -149,8 +158,6 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
       length + (index > 0 ? this.findDistance(point.point, points[index - 1].point) : 0), 0);
     const realLength = lineLengthPx * this.currentImage.ratio / this.diagonalPx;
 
-    this.sqrtLengthChange.emit(realLength);
-
     this.drawLineLengthText(realLength * 100);
   }
 
@@ -160,10 +167,11 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     const pointsPairs: PointArrayAlias = this.linePoints.map(p => [p.point.x, p.point.y] as ArrayXY);
+    const fillColor = this.showLineAreaInfo() ? `${this.lineColor}50` : 'none';
 
     this.drawingPolyine
       .plot(pointsPairs)
-      .fill('none')
+      .fill(fillColor)
       .stroke(this.lineColor);
   }
 
@@ -171,9 +179,15 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.linePoints || !this.linePoints.length || !this.drawingText) { return; }
 
     const lastPoint = this.linePoints[this.linePoints.length - 1].point || new Point(0, 0);
-    let text = lineLength ? `L=${lineLength.toFixed(2)} сm` : '';
-    if (text && this.polygonArea) {
-      text += `; S=${this.polygonArea.toFixed(2)} cm^2`;
+    let text: any = '';
+    if (lineLength && this.showLineLengthInfo()) {
+      text = `L=${lineLength.toFixed(1)} сm`;
+    }
+    if (this.polygonArea && this.showLineAreaInfo()) {
+      text = (add) => {
+        add.tspan(`S=${this.polygonArea.toFixed(1)} cm`);
+        add.tspan('2').dy(-5).font({ size: 10 });
+      };
     }
     this.drawingText
       .text(text)
@@ -186,7 +200,6 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.toDefault();
     const scale = this.widthPx / this.currentImage.width;
-    // this.drawingBackground.load(`${environment.serverPath}public/loader.png`);
     this.drawingBackground.load(this.currentImage.imgPath).scale(scale);
   }
 
@@ -211,7 +224,10 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
   private setCalculatedArea(): void {
     const points = this.linePoints;
 
-    if (points.length < 2) { return; }
+    if (points.length <= 2) {
+      this.polygonArea = 0;
+      return;
+    }
 
     let area = 0.0;
     let prevPoint = points[points.length - 1].point;
@@ -224,8 +240,12 @@ export class DrawingAreaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.polygonArea = 0.5 * Math.abs( area) * squareRatio;
   }
 
+  private showLineLengthInfo = (): boolean => this.infoViewMode === InfoViewModeType.length;
+  private showLineAreaInfo = (): boolean => this.infoViewMode === InfoViewModeType.area;
+
   private toDefault(): void {
     this.linePoints = [];
+    this.polygonArea = 0;
     this.drawingArea.viewbox(0, 0, this.widthPx, this.heightPx).zoom(1);
     this.drawingArea.clear();
     this.drawingArea.image(`${environment.serverPath}public/loader.png`);
